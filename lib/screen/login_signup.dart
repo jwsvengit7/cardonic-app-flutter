@@ -7,8 +7,8 @@ class LoginSignupScreen extends StatefulWidget {
 }
 
 class LoginSignupScreenState extends State<LoginSignupScreen> {
-  String _email = '';
-  String _password = '';
+  var _email = "";
+  var _password = "";
   SizedBox spaceHieigt = const SizedBox(height: 20);
   @override
   Widget build(BuildContext context) {
@@ -68,6 +68,7 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
                       _buildElevatedButton(),
                       spaceHieigt,
                       _buildColoredBox(Colors.white),
+                      _wrightContent(),
                     ],
                   ),
                 ),
@@ -77,8 +78,8 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => {},
-          child: Text("Login"),
           mouseCursor: SystemMouseCursors.alias,
+          child:const  Text("Login"),
         ));
   }
 
@@ -121,6 +122,14 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
       width: 300,
       height: 80,
       color: color,
+    );
+  }
+
+  Widget _wrightContent() {
+    return Container(
+      width: 200,
+      height: 20,
+      color: Colors.blue.shade800,
     );
   }
 }
