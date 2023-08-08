@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cardioc/screen/login_signup.dart';
-// import 'package:cardioc/screen/home.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Cardioc',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

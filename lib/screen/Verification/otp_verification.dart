@@ -1,11 +1,11 @@
+import 'package:cardioc/screen/Login_Signup.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:cardioc/screen/create_account.dart';
 import 'package:get/route_manager.dart';
 
-class LoginSignupScreen extends StatelessWidget {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+class Otp extends StatelessWidget {
+  final _otp = TextEditingController();
 
   SizedBox spaceHieigt = const SizedBox(height: 20);
   @override
@@ -30,7 +30,7 @@ class LoginSignupScreen extends StatelessWidget {
               top: 200,
               child: Container(
                 width: MediaQuery.of(context).size.width - 40,
-                height: 500,
+                height: 400,
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -54,16 +54,12 @@ class LoginSignupScreen extends StatelessWidget {
                         fit: BoxFit.contain,
                       ),
                       spaceHieigt,
-                      _buildInputField(
-                          hintText: 'Email', controller: _emailController),
+                      _buildInputField(hintText: 'OTP', controller: _otp),
                       spaceHieigt,
-                      _buildInputField(
-                          hintText: 'Password',
-                          controller: _passwordController),
                       spaceHieigt,
                       _buildElevatedButton(),
                       spaceHieigt,
-                      _wrightContent("Don't have an account", "Create one"),
+                      _wrightContent("Already have an account", "Log In"),
                     ],
                   ),
                 ),
@@ -101,13 +97,13 @@ class LoginSignupScreen extends StatelessWidget {
   Widget _buildElevatedButton() {
     return ElevatedButton(
         onPressed: () {
-          print(_emailController.text);
+          print(_otp.text);
         },
         child: Container(
           width: 280,
           height: 50,
           child: const Center(
-            child: Text('Login'),
+            child: Text('Enter OTP'),
           ),
         ));
   }
@@ -123,7 +119,7 @@ class LoginSignupScreen extends StatelessWidget {
   Widget _wrightContent(String text, String text2) {
     return GestureDetector(
       onTap: () {
-        Get.to(CreateAccountScreen(), transition: Transition.cupertino);
+        Get.to(LoginSignupScreen(), transition: Transition.cupertino);
       },
       child: SizedBox(
         width: 250,
