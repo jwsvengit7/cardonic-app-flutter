@@ -14,10 +14,7 @@ class  CreateAccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: AppBar(
-        //   title: Text('Login Account'),
-        // ),
-        body: Scaffold(
+      body: Scaffold(
       body: Stack(
         children: [
           Positioned(

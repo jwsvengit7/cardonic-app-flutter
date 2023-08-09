@@ -2,12 +2,53 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:cardioc/screen/create_account.dart';
 import 'package:get/route_manager.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:cardioc/screen/User/dashboard.dart';
+import 'package:network_info_plus/network_info_plus.dart';
 
-class LoginSignupScreen extends StatelessWidget {
+class LoginSignupScreen extends StatefulWidget {
+  @override
+  LoginSignupScreenState createState() => LoginSignupScreenState();
+}
+
+class LoginSignupScreenState extends State<LoginSignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  SizedBox spaceHieigt = const SizedBox(height: 20);
+  final SizedBox spaceHeight = SizedBox(height: 20);
+
+  Future<void> loginUser(String email, String password) async {
+    // final networkInfo = NetworkInfo();
+    // final wifiInfo = await networkInfo.getWifiName();
+    // final ipAddress = await networkInfo.getWifiIP();
+
+    // if (wifiInfo != null && ipAddress != null) {
+    try {
+      final url = Uri.parse('http://192.168.2.159:8085/api/v1/auth/login');
+
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'email': email, 'password': password}),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        print(responseData);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => DashboardScreen()),
+        );
+      } else {
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,23 +87,23 @@ class LoginSignupScreen extends StatelessWidget {
                 child: Center(
                   child: Column(
                     children: [
-                      spaceHieigt,
+                      spaceHeight,
                       SvgPicture.asset(
                         'images/logo.svg',
                         width: 50,
                         height: 50,
                         fit: BoxFit.contain,
                       ),
-                      spaceHieigt,
+                      spaceHeight,
                       _buildInputField(
                           hintText: 'Email', controller: _emailController),
-                      spaceHieigt,
+                      spaceHeight,
                       _buildInputField(
                           hintText: 'Password',
                           controller: _passwordController),
-                      spaceHieigt,
+                      spaceHeight,
                       _buildElevatedButton(),
-                      spaceHieigt,
+                      spaceHeight,
                       _wrightContent("Don't have an account", "Create one"),
                     ],
                   ),
@@ -74,7 +115,7 @@ class LoginSignupScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () => {},
           mouseCursor: SystemMouseCursors.alias,
-          child: const Text("Login"),
+          child: const Icon(Icons.air_rounded, color: Colors.blueAccent),
         ));
   }
 
@@ -101,13 +142,18 @@ class LoginSignupScreen extends StatelessWidget {
   Widget _buildElevatedButton() {
     return ElevatedButton(
         onPressed: () {
-          print(_emailController.text);
+          final email = _emailController.text;
+          final password = _passwordController.text;
+          loginUser(email, password);
         },
-        child: Container(
+        child: const SizedBox(
           width: 280,
           height: 50,
-          child: const Center(
-            child: Text('Login'),
+          child: Center(
+            child: Text(
+              'Login',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ));
   }
@@ -127,11 +173,12 @@ class LoginSignupScreen extends StatelessWidget {
       },
       child: SizedBox(
         width: 250,
-        height: 50,
+        height: 70,
         child: Center(
           child: Column(children: [
             Text(text),
             Text(text2),
+            Icon(Icons.air_rounded, color: Colors.blueAccent)
           ]),
         ),
       ),
