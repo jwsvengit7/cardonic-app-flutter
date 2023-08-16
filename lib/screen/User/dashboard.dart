@@ -1,3 +1,5 @@
+import 'package:cardioc/screen/User/giftcards/giftcards.dart';
+import 'package:cardioc/screen/User/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:cardioc/screen/User/homed1.dart';
 import 'package:cardioc/screen/User/footer.dart';
@@ -20,7 +22,7 @@ class DashboardScreenState extends State<DashboardScreen> {
           children: <Widget>[
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 203, 216, 222),
+                color: Color.fromARGB(255, 44, 86, 223),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,12 +32,14 @@ class DashboardScreenState extends State<DashboardScreen> {
                     'Welcome',
                     style: TextStyle(
                       fontSize: 20,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     'Temple Chiorlu',
                     style: TextStyle(
+                      color: Colors.white,
                       fontSize: 16,
                     ),
                   ),
@@ -50,7 +54,12 @@ class DashboardScreenState extends State<DashboardScreen> {
             ListTile(
               leading: const Icon(Icons.card_giftcard),
               title: const Text('Sell Giftcards'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Giftcards()),
+                );
+              },
             ),
             ListTile(
               leading: const Icon(Icons.currency_bitcoin),
@@ -58,13 +67,23 @@ class DashboardScreenState extends State<DashboardScreen> {
               onTap: () {},
             ),
             ListTile(
-              leading: const Icon(Icons.dashboard),
-              title: const Text('Dashboard'),
+              leading: const Icon(Icons.history),
+              title: const Text('History'),
               onTap: () {},
             ),
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Settings'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Setting()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
               onTap: () {},
             ),
           ],
