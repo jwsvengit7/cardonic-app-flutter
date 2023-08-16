@@ -7,12 +7,7 @@ class Footer extends StatefulWidget {
 
 class FooterState extends State<Footer> {
   int _currentIndex = 0;
-  final List<Widget> _screens = [
-    Screen1(),
-    Screen2(),
-    Screen3(),
-    Screen4(),
-  ];
+
   @override
   Widget build(BuildContext buildContext) {
     return BottomNavigationBar(
@@ -40,11 +35,19 @@ class FooterState extends State<Footer> {
   }
 }
 
+Text _wright(String text) {
+  return Text(
+    text,
+    style: const TextStyle(
+        fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.red),
+  );
+}
+
 class Screen1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Home Screen'),
+    return Center(
+      child: _wright('Home Screen'),
     );
   }
 }
@@ -52,8 +55,8 @@ class Screen1 extends StatelessWidget {
 class Screen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Search Screen'),
+    return Center(
+      child: _wright('Search Screen'),
     );
   }
 }
@@ -61,8 +64,8 @@ class Screen2 extends StatelessWidget {
 class Screen3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Profile Screen'),
+    return Center(
+      child: _wright("Profile Screen"),
     );
   }
 }
@@ -70,8 +73,8 @@ class Screen3 extends StatelessWidget {
 class Screen4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Logout Screen'),
+    return Center(
+      child: _wright("Logout Screen"),
     );
   }
 }

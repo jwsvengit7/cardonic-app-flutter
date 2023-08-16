@@ -1,5 +1,8 @@
+import 'package:cardioc/screen/Verification/otp_verification.dart';
 import 'package:flutter/material.dart';
 import 'package:cardioc/screen/login_signup.dart';
+import 'package:cardioc/screen/create_account.dart';
+import 'package:cardioc/screen/User/dashboard.dart';
 import 'package:get/get.dart';
 
 void main() {
@@ -18,7 +21,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginSignupScreen(),
+      initialRoute: "/dashboard",
+      routes: {
+        '/': (context) => LoginSignupScreen(),
+        '/signup': (context) => CreateAccountScreen(),
+        '/otp': (context) => Otp(),
+        '/dashboard': (context) => DashboardScreen(),
+      },
     );
   }
 }

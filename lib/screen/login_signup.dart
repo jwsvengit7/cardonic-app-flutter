@@ -5,7 +5,6 @@ import 'package:get/route_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cardioc/screen/User/dashboard.dart';
-import 'package:network_info_plus/network_info_plus.dart';
 
 class LoginSignupScreen extends StatefulWidget {
   @override
@@ -19,13 +18,8 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
   final SizedBox spaceHeight = SizedBox(height: 20);
 
   Future<void> loginUser(String email, String password) async {
-    // final networkInfo = NetworkInfo();
-    // final wifiInfo = await networkInfo.getWifiName();
-    // final ipAddress = await networkInfo.getWifiIP();
-
-    // if (wifiInfo != null && ipAddress != null) {
     try {
-      final url = Uri.parse('http://192.168.2.159:8085/api/v1/auth/login');
+      final url = Uri.parse('http://192.168.147.210:8085/api/v1/auth/login');
 
       final response = await http.post(
         url,

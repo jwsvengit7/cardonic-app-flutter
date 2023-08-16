@@ -1,16 +1,75 @@
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
-import 'package:cardioc/screen/login_signup.dart';
-import 'package:get/route_manager.dart';
 import 'package:cardioc/screen/User/homed1.dart';
 import 'package:cardioc/screen/User/footer.dart';
-import 'package:cardioc/screen/login_signup.dart';
 
-class DashboardScreen extends StatelessWidget {
-  final SizedBox spaceHieigt = const SizedBox(height: 20);
+class DashboardScreen extends StatefulWidget {
+  @override
+  DashboardScreenState createState() => DashboardScreenState();
+}
+
+class DashboardScreenState extends State<DashboardScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 203, 216, 222),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Text(
+                    'Welcome',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Temple Chiorlu',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.dashboard),
+              title: const Text('Dashboard'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.card_giftcard),
+              title: const Text('Sell Giftcards'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.currency_bitcoin),
+              title: const Text('Exchange Coin'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.dashboard),
+              title: const Text('Dashboard'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -21,75 +80,47 @@ class DashboardScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                    height: 130,
+                    height: 100,
                     color: const Color.fromARGB(255, 203, 216, 222),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: ClipOval(
-                            child: Image.asset(
-                              'images/bg.jpg',
-                              fit: BoxFit.cover,
-                            ),
+                        InkWell(
+                          onTap: () {
+                            _scaffoldKey.currentState!.openDrawer();
+                          },
+                          child: const SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: Icon(Icons.menu),
                           ),
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 200,
                           height: 70,
-                        ),
-                        SizedBox(
-                          width: 100,
-                          height: 90,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Stack(
-                                children: [
-                                  const Icon(Icons.verified_user,
-                                      color: Colors.blueAccent),
-                                  Container(
-                                    padding: const EdgeInsets.only(left: 40),
-                                    child: const Text("jwsven"),
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {},
+                                child: const Text(
+                                  "Dashboard",
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 2, 23, 40),
                                   ),
-                                ],
-                              ),
-                              Stack(
-                                children: [
-                                  const Icon(Icons.settings,
-                                      color: Colors.blueAccent),
-                                  Container(
-                                    padding: const EdgeInsets.only(left: 40),
-                                    child: const Text("Setting"),
-                                  ),
-                                ],
-                              ),
-                              Stack(
-                                children: [
-                                  const Icon(Icons.logout,
-                                      color: Colors.blueAccent),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                LoginSignupScreen()),
-                                      );
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.only(left: 40),
-                                      child: const Text("Logout"),
-                                    ),
-                                  )
-                                ],
+                                ),
                               ),
                             ],
                           ),
+                        ),
+                        const SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Icon(Icons.notification_add),
                         ),
                       ],
                     ),
@@ -100,6 +131,7 @@ class DashboardScreen extends StatelessWidget {
                       shrinkWrap: true,
                       children: <Widget>[
                         HomeFirst(),
+                        // Add more widgets as needed
                       ],
                     ),
                   ),

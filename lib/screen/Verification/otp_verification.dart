@@ -1,7 +1,6 @@
 import 'package:cardioc/screen/Login_Signup.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
-import 'package:cardioc/screen/create_account.dart';
 import 'package:get/route_manager.dart';
 
 class Otp extends StatelessWidget {

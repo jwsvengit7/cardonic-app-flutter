@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeFirst extends StatefulWidget {
   @override
@@ -6,6 +7,38 @@ class HomeFirst extends StatefulWidget {
 }
 
 class HomeFirstState extends State<HomeFirst> {
+  List<Map<dynamic, String>> containerList = [
+    {
+      "name": "Bitcoin",
+      "image": "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+      "price": "3029",
+    },
+    {
+      "name": "Ethereum",
+      "image":
+          "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
+      "price": "3029",
+    },
+    {
+      "name": "Tether",
+      "image":
+          "https://assets.coingecko.com/coins/images/325/large/Tether.png?1668148663",
+      "price": "3029",
+    },
+    {
+      "name": "BNB",
+      "image":
+          "https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1644979850",
+      "price": "3029",
+    },
+    {
+      "name": "XRP",
+      "image":
+          "https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1605778731",
+      "price": "3029",
+    },
+  ];
+
   @override
   Widget build(BuildContext buildContext) {
     return Column(
@@ -15,6 +48,7 @@ class HomeFirstState extends State<HomeFirst> {
         Container(
           width: 390,
           height: 300,
+          color: Colors.white70,
           padding: const EdgeInsets.only(top: 40),
           child: Positioned(
             bottom: 30,
@@ -85,10 +119,49 @@ class HomeFirstState extends State<HomeFirst> {
           ),
         ),
         Container(
-          width: 100,
-          height: 500,
+          width: double.infinity,
+          height: 300,
+          color: Colors.white,
           margin: const EdgeInsets.only(bottom: 20, top: 20),
-          color: Color.fromARGB(255, 194, 238, 247),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: containerList.map((value) {
+                return Container(
+                    width: 170,
+                    height: 160,
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          child: Image.network(
+                            value["image"]!,
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        Text("Price: " + value["price"]!),
+                        Text(value["name"]!),
+                      ],
+                    ));
+              }).toList(),
+            ),
+          ),
         )
       ],
     );
