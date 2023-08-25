@@ -1,4 +1,4 @@
-import 'package:cardioc/screen/Login_Signup.dart';
+import 'package:cardmonix/screen/Login_Signup.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -10,6 +10,7 @@ class Otp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(title: Text("OTP")),
         body: Stack(
           children: [
             Positioned(

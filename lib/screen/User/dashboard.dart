@@ -1,8 +1,9 @@
-import 'package:cardioc/screen/User/giftcards/giftcards.dart';
-import 'package:cardioc/screen/User/settings.dart';
+import 'package:cardmonix/screen/User/giftcards/giftcards.dart';
+import 'package:cardmonix/screen/User/settings.dart';
+import 'package:cardmonix/screen/Verification/otp_verification.dart';
 import 'package:flutter/material.dart';
-import 'package:cardioc/screen/User/homed1.dart';
-import 'package:cardioc/screen/User/footer.dart';
+import 'package:cardmonix/screen/User/homed1.dart';
+import 'package:cardmonix/screen/User/footer.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -84,7 +85,12 @@ class DashboardScreenState extends State<DashboardScreen> {
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Otp()),
+                );
+              },
             ),
           ],
         ),

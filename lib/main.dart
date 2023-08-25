@@ -1,8 +1,8 @@
-import 'package:cardioc/screen/Verification/otp_verification.dart';
+import 'package:cardmonix/screen/Verification/otp_verification.dart';
 import 'package:flutter/material.dart';
-import 'package:cardioc/screen/login_signup.dart';
-import 'package:cardioc/screen/create_account.dart';
-import 'package:cardioc/screen/User/dashboard.dart';
+import 'package:cardmonix/screen/login_signup.dart';
+import 'package:cardmonix/screen/create_account.dart';
+import 'package:cardmonix/screen/User/dashboard.dart';
 import 'package:get/get.dart';
 
 void main() {
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: "/dashboard",
+      initialRoute: "/signup",
       routes: {
         '/': (context) => LoginSignupScreen(),
         '/signup': (context) => CreateAccountScreen(),

@@ -1,10 +1,10 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
-import 'package:cardioc/screen/create_account.dart';
+import 'package:cardmonix/screen/create_account.dart';
 import 'package:get/route_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:cardioc/screen/User/dashboard.dart';
+import 'package:cardmonix/screen/User/dashboard.dart';
 
 class LoginSignupScreen extends StatefulWidget {
   @override
