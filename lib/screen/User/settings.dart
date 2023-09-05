@@ -8,6 +8,7 @@ import 'package:cardmonix/screen/User/setting/password.dart';
 import 'package:flutter/material.dart';
 
 class Setting extends StatelessWidget {
+  Color color = Color.fromARGB(255, 237, 70, 41);
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Settings")),
@@ -22,12 +23,12 @@ class Setting extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => CardContent()),
               );
             },
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Edit Card",
-                  style: TextStyle(fontSize: 20, color: Colors.blue),
+                  style: TextStyle(fontSize: 20, color: color),
                 ),
                 Icon(Icons.card_membership),
               ],
@@ -44,12 +45,12 @@ class Setting extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => Graph()),
               );
             },
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "View Graph",
-                  style: TextStyle(fontSize: 20, color: Colors.blue),
+                  style: TextStyle(fontSize: 20, color: color),
                 ),
                 Icon(Icons.graphic_eq_sharp),
               ],
@@ -66,12 +67,12 @@ class Setting extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => Wallet()),
               );
             },
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Connect Wallet",
-                  style: TextStyle(fontSize: 20, color: Colors.blue),
+                  style: TextStyle(fontSize: 20, color: color),
                 ),
                 Icon(Icons.wallet_giftcard),
               ],
@@ -88,12 +89,12 @@ class Setting extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => Account()),
               );
             },
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
                   "Edit Account",
-                  style: TextStyle(fontSize: 20, color: Colors.blue),
+                  style: TextStyle(fontSize: 20, color: color),
                 ),
                 Icon(Icons.account_box),
               ],
@@ -110,12 +111,12 @@ class Setting extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => Password()),
               );
             },
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Passsword",
-                  style: TextStyle(fontSize: 20, color: Colors.blue),
+                  style: TextStyle(fontSize: 20, color: color),
                 ),
                 Icon(Icons.password),
               ],
@@ -132,12 +133,12 @@ class Setting extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => Contact()),
               );
             },
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Edit Contact Information",
-                  style: TextStyle(fontSize: 20, color: Colors.blue),
+                  style: TextStyle(fontSize: 20, color: color),
                 ),
                 Icon(Icons.history),
               ],
@@ -154,12 +155,12 @@ class Setting extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => Security()),
               );
             },
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Security",
-                  style: TextStyle(fontSize: 20, color: Colors.blue),
+                  style: TextStyle(fontSize: 20, color: color),
                 ),
                 Icon(Icons.security),
               ],

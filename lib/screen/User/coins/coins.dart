@@ -1,8 +1,10 @@
 import 'package:cardmonix/screen/User/coins/CoinDetails.dart';
 import 'package:flutter/material.dart';
 
+import '../dto/CoinsResponse.dart';
+
 class HomeFirst extends StatefulWidget {
-  final List<Map<String, dynamic>> coinData;
+  final List<Coin> coinData;
   BigInt? amount;
 
   HomeFirst(this.coinData, {required this.amount});
@@ -29,7 +31,7 @@ class HomeFirstState extends State<HomeFirst> {
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.red,
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
@@ -65,7 +67,7 @@ class HomeFirstState extends State<HomeFirst> {
                       ),
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
                       'Active',
@@ -96,8 +98,11 @@ class HomeFirstState extends State<HomeFirst> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) =>
-                            CoinDetailScreen(coinName: value["name"]),
+                        builder: (context) => CoinDetailScreen(
+                          coinName: value.name,
+                          coinPrice: value.current_price,
+                          coinImage: value.image,
+                        ),
                       ),
                     );
                   },
@@ -129,7 +134,7 @@ class HomeFirstState extends State<HomeFirst> {
                             ),
                             child: Center(
                               child: Image.network(
-                                value["image"]!,
+                                value.image,
                                 width: 50,
                                 height: 50,
                                 fit: BoxFit.contain,
@@ -138,15 +143,16 @@ class HomeFirstState extends State<HomeFirst> {
                           ),
                         ),
                         Text(
-                          value["name"]!,
+                          value.name,
                           style: const TextStyle(
                             fontSize: 20,
+                            color: Colors.red,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         SizedBox(height: 5),
                         Text(
-                          "\$${value["current_price"]!}",
+                          "\$${value.current_price}",
                           style: const TextStyle(
                             fontSize: 18,
                             color: Colors.green,
@@ -157,7 +163,7 @@ class HomeFirstState extends State<HomeFirst> {
                         ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Colors.red,
                           ),
                           child: const Text(
                             "Buy",

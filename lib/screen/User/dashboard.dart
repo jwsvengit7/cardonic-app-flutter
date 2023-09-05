@@ -1,14 +1,13 @@
+import 'package:cardmonix/screen/User/dto/CoinsResponse.dart';
 import 'package:cardmonix/screen/User/dto/UserDetails.dart';
-import 'package:cardmonix/screen/User/giftcards/giftcards.dart';
+import 'package:cardmonix/screen/User/giftcards/giftcardsItem.dart';
 import 'package:cardmonix/screen/User/settings.dart';
 import 'package:cardmonix/screen/Verification/otp_verification.dart';
 import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/User/coins/coins.dart';
 import 'package:cardmonix/screen/User/footer.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -23,7 +22,7 @@ class DashboardScreenState extends State<DashboardScreen> {
   String role = '';
   BigInt? amount = null;
 
-  List<Map<String, dynamic>> coinData = [];
+  List<Coin> coinData = [];
   dynamic userInfo;
 
   Future<void> fetchData() async {
@@ -35,15 +34,24 @@ class DashboardScreenState extends State<DashboardScreen> {
         final List<dynamic> content = data['data']['content'];
 
         setState(() {
-          coinData = content.cast<Map<String, dynamic>>();
+          coinData = content.map((coinJson) {
+            return Coin(
+              coin_id: coinJson['coin_id'],
+              name: coinJson['name'],
+              image: coinJson['image'],
+              current_price: coinJson['current_price'],
+              old_price: coinJson['old_price'],
+              activate: coinJson['activate'],
+            );
+          }).toList();
         });
-        print(coinData);
+        print(coinData.length);
       } else {
         print("Error");
         throw Exception('Failed to load data');
       }
     } catch (error) {
-      print("Error ocurred");
+      print("Error occurred: $error");
       throw Exception('Error: $error');
     }
   }
@@ -112,7 +120,7 @@ class DashboardScreenState extends State<DashboardScreen> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 44, 86, 223),
+                color: Color.fromARGB(255, 237, 70, 41),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +144,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                   Text(
                     email,
                     style: TextStyle(
-                      color: Color.fromARGB(155, 255, 255, 255),
+                      color: Color.fromARGB(255, 237, 70, 41),
                       fontSize: 13,
                     ),
                   ),
@@ -154,7 +162,7 @@ class DashboardScreenState extends State<DashboardScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Giftcards()),
+                  MaterialPageRoute(builder: (context) => Item()),
                 );
               },
             ),
@@ -202,7 +210,6 @@ class DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   Container(
                     height: 100,
-                    color: const Color.fromARGB(255, 203, 216, 222),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -214,7 +221,8 @@ class DashboardScreenState extends State<DashboardScreen> {
                           child: const SizedBox(
                             width: 40,
                             height: 40,
-                            child: Icon(Icons.menu),
+                            child:
+                                Icon(Icons.menu, color: Colors.red, size: 35),
                           ),
                         ),
                         SizedBox(
@@ -224,15 +232,13 @@ class DashboardScreenState extends State<DashboardScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              ElevatedButton(
-                                onPressed: () {},
-                                child: const Text(
-                                  "Dashboard",
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 2, 23, 40),
-                                  ),
+                              Container(
+                                height: 100,
+                                alignment: Alignment.center,
+                                child: Image.asset(
+                                  "images/logo-app.jpeg",
+                                  width: 70,
+                                  height: 70,
                                 ),
                               ),
                             ],
@@ -241,7 +247,11 @@ class DashboardScreenState extends State<DashboardScreen> {
                         const SizedBox(
                           width: 40,
                           height: 40,
-                          child: Icon(Icons.notification_add),
+                          child: Icon(
+                            Icons.notification_add,
+                            size: 30,
+                            color: Colors.red,
+                          ),
                         ),
                       ],
                     ),
@@ -255,7 +265,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                         Container(
                           width: MediaQuery.devicePixelRatioOf(context),
                           height: 300,
-                          color: Colors.red,
+                          color: Colors.white,
                         )
                       ],
                     ),

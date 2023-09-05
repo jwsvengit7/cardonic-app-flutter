@@ -137,7 +137,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                   children: [
                     spaceHeight,
                     SvgPicture.asset(
-                      'images/logo.svg',
+                      'images/logo-app.jpeg',
                       width: 50,
                       height: 50,
                       fit: BoxFit.contain,
