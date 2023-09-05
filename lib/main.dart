@@ -21,11 +21,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: "/signup",
+      initialRoute: "/dashboard",
       routes: {
         '/': (context) => LoginSignupScreen(),
         '/signup': (context) => CreateAccountScreen(),
-        '/otp': (context) => Otp(),
+        '/otp': (context) => Otp(email: ""),
         '/dashboard': (context) => DashboardScreen(),
       },
     );

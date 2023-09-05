@@ -1,9 +1,14 @@
+import 'package:cardmonix/screen/User/dto/UserDetails.dart';
 import 'package:cardmonix/screen/User/giftcards/giftcards.dart';
 import 'package:cardmonix/screen/User/settings.dart';
 import 'package:cardmonix/screen/Verification/otp_verification.dart';
+import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
-import 'package:cardmonix/screen/User/homed1.dart';
+import 'package:cardmonix/screen/User/coins/coins.dart';
 import 'package:cardmonix/screen/User/footer.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -12,6 +17,90 @@ class DashboardScreen extends StatefulWidget {
 
 class DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String email = '';
+  String user_name = '';
+  String profile = '';
+  String role = '';
+  BigInt? amount = null;
+
+  List<Map<String, dynamic>> coinData = [];
+  dynamic userInfo;
+
+  Future<void> fetchData() async {
+    try {
+      final response = await APIService().fetchCoins(0, 10);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        final List<dynamic> content = data['data']['content'];
+
+        setState(() {
+          coinData = content.cast<Map<String, dynamic>>();
+        });
+        print(coinData);
+      } else {
+        print("Error");
+        throw Exception('Failed to load data');
+      }
+    } catch (error) {
+      print("Error ocurred");
+      throw Exception('Error: $error');
+    }
+  }
+
+  Future<void> fetchBalance() async {
+    final savedToken = await APIService().getStoredToken();
+    print("Bearer " + savedToken!);
+
+    try {
+      final response = await APIService().fetchBalance(savedToken);
+      print(savedToken);
+
+      if (response.statusCode == 200) {
+        final dynamic userDetailsJson = json.decode(response.body);
+
+        print(userDetailsJson["data"]);
+        final UserDetails userDetails = UserDetails.fromJson(userDetailsJson);
+        final Balance balanceData = userDetails.data.balance;
+        print(balanceData);
+        print(balanceData.currency);
+
+        // ignore: unnecessary_null_comparison
+        if (balanceData != null) {
+          amount = balanceData.amount;
+        } else {
+          amount = BigInt.two;
+        }
+
+        if (userDetails.data.email != null) {
+          email = userDetails.data.email!;
+        } else {
+          email = '********';
+        }
+
+        setState(() {
+          email = userDetails.data.email!;
+          user_name = userDetails.data.user_name!;
+          profile = userDetails.data.profile;
+          role = userDetails.data.role;
+          print(amount);
+          print("****************************");
+        });
+      } else {
+        print("Failed to fetch data. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    fetchData();
+    fetchBalance();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +110,7 @@ class DashboardScreenState extends State<DashboardScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 44, 86, 223),
               ),
@@ -29,8 +118,8 @@ class DashboardScreenState extends State<DashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Text(
-                    'Welcome',
+                  const Text(
+                    "Welcome",
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -38,10 +127,17 @@ class DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                   Text(
-                    'Temple Chiorlu',
-                    style: TextStyle(
+                    user_name,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    email,
+                    style: TextStyle(
+                      color: Color.fromARGB(155, 255, 255, 255),
+                      fontSize: 13,
                     ),
                   ),
                 ],
@@ -88,7 +184,7 @@ class DashboardScreenState extends State<DashboardScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Otp()),
+                  MaterialPageRoute(builder: (context) => Otp(email: "")),
                 );
               },
             ),
@@ -155,8 +251,12 @@ class DashboardScreenState extends State<DashboardScreen> {
                     child: ListView(
                       shrinkWrap: true,
                       children: <Widget>[
-                        HomeFirst(),
-                        // Add more widgets as needed
+                        HomeFirst(coinData, amount: amount),
+                        Container(
+                          width: MediaQuery.devicePixelRatioOf(context),
+                          height: 300,
+                          color: Colors.red,
+                        )
                       ],
                     ),
                   ),

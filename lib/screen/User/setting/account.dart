@@ -1,69 +1,89 @@
 import 'package:flutter/material.dart';
 
 class Account extends StatefulWidget {
+  const Account({super.key});
+
   @override
   AccountState createState() => AccountState();
 }
 
-SizedBox spaceHieigt = const SizedBox(height: 20);
-
 class AccountState extends State<Account> {
   @override
-  Widget build(BuildContext buildContext) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Account"),
+        title: Text("Edit Bank Account"),
       ),
       body: Container(
+        padding: EdgeInsets.all(16.0),
         child: ListView(
           children: <Widget>[
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  width: double.infinity,
-                  height: 200,
-                  child: Image.asset('images/logo.png',
-                      width: 10, height: 10, fit: BoxFit.none),
+                SizedBox(
+                  height: 20,
                 ),
-                Column(children: [
-                  buildInputField(),
-                  spaceHieigt,
-                  buildInputField(),
-                  spaceHieigt,
-                  _buildElevatedButton()
-                ])
+                Icon(
+                  Icons.account_balance,
+                  size: 100,
+                  color: Colors.blue,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                buildInputField("Account Holder's Name", "John Doe"),
+                SizedBox(
+                  height: 20,
+                ),
+                buildInputField("Bank Name", "Bank of America"),
+                SizedBox(
+                  height: 20,
+                ),
+                buildInputField("Account Number", "1234 5678 9012 3456"),
+                SizedBox(
+                  height: 20,
+                ),
+                buildInputField("Routing Number", "987654321"),
+                SizedBox(
+                  height: 20,
+                ),
+                _buildSaveButton(),
               ],
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget buildInputField() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7),
-      child: TextField(
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
+  Widget buildInputField(String labelText, String initialValue) {
+    return TextFormField(
+      initialValue: initialValue,
+      decoration: InputDecoration(
+        labelText: labelText,
+        border: OutlineInputBorder(),
       ),
     );
   }
 
-  Widget _buildElevatedButton() {
+  Widget _buildSaveButton() {
     return ElevatedButton(
-        onPressed: () {},
-        child: const SizedBox(
-          width: 300,
-          height: 50,
-          child: Center(
-            child: Text('Change Password'),
+      onPressed: () {},
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        child: Text(
+          'Save Changes',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
-        ));
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue,
+      ),
+    );
   }
 }

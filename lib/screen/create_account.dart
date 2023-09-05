@@ -1,6 +1,8 @@
 import 'package:cardmonix/screen/Verification/otp_verification.dart';
-import 'package:cardmonix/screen/User/dto/User.dart';
+import 'package:cardmonix/screen/login_signup.dart';
+// import 'package:cardmonix/screen/User/dto/User.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -40,10 +42,10 @@ class CreateAccountScreen extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 120,
+              top: 150,
               child: Container(
                 width: MediaQuery.of(context).size.width - 40,
-                height: 650,
+                height: 550,
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -139,10 +141,14 @@ class CreateAccountScreen extends StatelessWidget {
     );
   }
 
-  void _registerUser(BuildContext context) async {
+  Future<void> _registerUser(BuildContext context) async {
     String email = _emailController.text;
     String password = _passwordController.text;
+    String cpassword = _cpasswordController.text;
     String username = _usernameController.text;
+    if (password != cpassword) {
+      _showMessageWarning(context, "Password does not Match");
+    }
 
     Map<String, dynamic> requestBody = {
       'email': email,
@@ -150,6 +156,13 @@ class CreateAccountScreen extends StatelessWidget {
       'username': username,
     };
     Uri uri = Uri.parse(url);
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return LoadingSpinner();
+      },
+    );
 
     http.Response response = await http.post(
       uri,
@@ -173,10 +186,31 @@ class CreateAccountScreen extends StatelessWidget {
                 Navigator.of(context).pop();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Otp()),
+                  MaterialPageRoute(
+                      builder: (context) => Otp(email: _emailController.text)),
                 );
               },
               child: const Text('Next'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showMessageWarning(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Registration'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Close'),
             ),
           ],
         );
@@ -203,6 +237,8 @@ class CreateAccountScreen extends StatelessWidget {
 
                 if (response.statusCode == 201) {
                   _showSuccessDialog(context);
+                } else {
+                  _showSuccessDialog(context);
                 }
               },
               child: Text('OK'),
@@ -216,8 +252,7 @@ class CreateAccountScreen extends StatelessWidget {
   Widget _wrightContent(String text, String text2) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(dynamic as BuildContext,
-            MaterialPageRoute(builder: (context) => Otp()));
+        Get.to(LoginSignupScreen(), transition: Transition.cupertino);
       },
       child: SizedBox(
         width: 250,
@@ -229,6 +264,15 @@ class CreateAccountScreen extends StatelessWidget {
           ]),
         ),
       ),
+    );
+  }
+}
+
+class LoadingSpinner extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 }
