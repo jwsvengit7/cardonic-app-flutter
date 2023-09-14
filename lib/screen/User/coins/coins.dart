@@ -1,7 +1,7 @@
 import 'package:cardmonix/screen/User/coins/CoinDetails.dart';
 import 'package:flutter/material.dart';
 
-import '../dto/CoinsResponse.dart';
+import '../dto/response/CoinsResponse.dart';
 
 class HomeFirst extends StatefulWidget {
   final List<Coin> coinData;
@@ -48,7 +48,7 @@ class HomeFirstState extends State<HomeFirst> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
-                      '\$${widget.amount}.00',
+                      '\$${widget.amount == null ? 0 : widget.amount}.00',
                       style: const TextStyle(
                         color: Color.fromARGB(184, 255, 255, 255),
                         fontSize: 25,

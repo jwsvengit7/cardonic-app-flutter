@@ -1,5 +1,5 @@
-import 'package:cardmonix/screen/User/dto/CoinsResponse.dart';
-import 'package:cardmonix/screen/User/dto/UserDetails.dart';
+import 'package:cardmonix/screen/User/dto/response/CoinsResponse.dart';
+import 'package:cardmonix/screen/User/dto/response/UserDetails.dart';
 import 'package:cardmonix/screen/User/giftcards/giftcardsItem.dart';
 import 'package:cardmonix/screen/User/settings.dart';
 import 'package:cardmonix/screen/Verification/otp_verification.dart';
@@ -20,7 +20,7 @@ class DashboardScreenState extends State<DashboardScreen> {
   String user_name = '';
   String profile = '';
   String role = '';
-  BigInt? amount = null;
+  BigInt? amount;
 
   List<Coin> coinData = [];
   dynamic userInfo;
@@ -45,7 +45,7 @@ class DashboardScreenState extends State<DashboardScreen> {
             );
           }).toList();
         });
-        print(coinData.length);
+     
       } else {
         print("Error");
         throw Exception('Failed to load data');
@@ -129,24 +129,25 @@ class DashboardScreenState extends State<DashboardScreen> {
                   const Text(
                     "Welcome",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 25,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  SizedBox(height: 10),
                   Text(
                     user_name,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 18,
                     ),
                   ),
                   Text(
                     email,
                     style: TextStyle(
-                      color: Color.fromARGB(255, 237, 70, 41),
-                      fontSize: 13,
-                    ),
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -200,82 +201,149 @@ class DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              width: 400,
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    height: 100,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () {
-                            _scaffoldKey.currentState!.openDrawer();
-                          },
-                          child: const SizedBox(
-                            width: 40,
-                            height: 40,
-                            child:
-                                Icon(Icons.menu, color: Colors.red, size: 35),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 200,
-                          height: 70,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 100,
-                                alignment: Alignment.center,
-                                child: Image.asset(
-                                  "images/logo-app.jpeg",
-                                  width: 70,
-                                  height: 70,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
+          child: Stack(
+        children: [
+          Container(
+            width: 400,
+            color: Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  height: 100,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      InkWell(
+                        onTap: () {
+                          _scaffoldKey.currentState!.openDrawer();
+                        },
+                        child: const SizedBox(
                           width: 40,
                           height: 40,
-                          child: Icon(
-                            Icons.notification_add,
-                            size: 30,
-                            color: Colors.red,
-                          ),
+                          child: Icon(Icons.menu, color: Colors.red, size: 35),
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                        width: 200,
+                        height: 70,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 100,
+                              alignment: Alignment.center,
+                              child: Image.asset(
+                                "images/logo-app.jpeg",
+                                width: 70,
+                                height: 70,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Icon(
+                          Icons.notification_add,
+                          size: 30,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: <Widget>[
-                        HomeFirst(coinData, amount: amount),
-                        Container(
-                          width: MediaQuery.devicePixelRatioOf(context),
-                          height: 300,
-                          color: Colors.white,
-                        )
-                      ],
-                    ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      HomeFirst(coinData, amount: amount),
+                      Container(
+                        width: MediaQuery.devicePixelRatioOf(context),
+                        height: 600,
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Positioned(
+                              top: 0,
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: 400,
+                                height: 80,
+                                child: Image.asset(
+                                  "images/logo-app.jpeg",
+                                  width: 60,
+                                  height: 60,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width - 40,
+                              height: 140,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.3),
+                                    blurRadius: 15,
+                                    spreadRadius: 5,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width - 40,
+                              height: 140,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.3),
+                                    blurRadius: 15,
+                                    spreadRadius: 5,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width - 40,
+                              height: 140,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.3),
+                                    blurRadius: 15,
+                                    spreadRadius: 5,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      )),
       bottomNavigationBar: Footer(),
     );
   }

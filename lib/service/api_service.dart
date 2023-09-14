@@ -58,6 +58,13 @@ class APIService {
     );
   }
 
+  Future<http.Response> getWallet(var saveToken) {
+    return http
+        .get(Uri.parse("${Constants.BASE_URL}/api/v1/user/wallets"), headers: {
+      'Authorization': 'Beaer $saveToken',
+    });
+  }
+
   Future<String?> getStoredToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');

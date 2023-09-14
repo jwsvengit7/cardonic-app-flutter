@@ -1,6 +1,5 @@
 import 'package:cardmonix/screen/Verification/otp_verification.dart';
 import 'package:cardmonix/screen/login_signup.dart';
-// import 'package:cardmonix/screen/User/dto/User.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:http/http.dart' as http;
@@ -27,25 +26,19 @@ class CreateAccountScreen extends StatelessWidget {
           children: [
             Positioned(
               top: 0,
-              child: Form(
-                key: _formKey,
+              child: Container(
+                width: 400,
                 child: Container(
-                  width: 400,
-                  color: Colors.red,
-                  child: Image.asset(
-                    'images/bg.jpg',
-                    width: MediaQuery.of(context).size.width - 90,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
+                  width: MediaQuery.of(context).size.width - 90,
+                  height: 200,
                 ),
               ),
             ),
             Positioned(
-              top: 150,
+              top: 100,
               child: Container(
                 width: MediaQuery.of(context).size.width - 40,
-                height: 550,
+                height: 650,
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -61,6 +54,13 @@ class CreateAccountScreen extends StatelessWidget {
                 child: Center(
                   child: Column(
                     children: [
+                      spaceHieigt,
+                      Image.asset(
+                        'images/logo-app.jpeg',
+                        width: 70,
+                        height: 70,
+                        fit: BoxFit.contain,
+                      ),
                       spaceHieigt,
                       buildInputField(
                         hintText: 'Username',
@@ -131,11 +131,17 @@ class CreateAccountScreen extends StatelessWidget {
           _registerUser(context);
         }
       },
-      child: const SizedBox(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.red,
+      ),
+      child: Container(
         width: 280,
         height: 50,
-        child: Center(
-          child: Text('Signup'),
+        child: const Center(
+          child: Text(
+            'Signup',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
     );
@@ -250,19 +256,36 @@ class CreateAccountScreen extends StatelessWidget {
   }
 
   Widget _wrightContent(String text, String text2) {
-    return GestureDetector(
-      onTap: () {
-        Get.to(LoginSignupScreen(), transition: Transition.cupertino);
-      },
-      child: SizedBox(
-        width: 250,
-        height: 50,
-        child: Center(
-          child: Column(children: [
-            Text(text),
-            Text(text2),
-          ]),
-        ),
+    return Container(
+      width: 250,
+      child: Center(
+        child: Column(children: [
+          Text(text),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Get.to(LoginSignupScreen());
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromARGB(255, 244, 117, 54),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            child: Container(
+              width: 100,
+              height: 40,
+              alignment: Alignment.center,
+              child: Text(
+                "Login",
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ]),
       ),
     );
   }

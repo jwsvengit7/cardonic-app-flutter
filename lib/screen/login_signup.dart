@@ -1,9 +1,6 @@
 import 'package:cardmonix/service/api_service.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/create_account.dart';
-import 'package:get/route_manager.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:convert';
@@ -26,9 +23,9 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        final token =
-            responseData['data']['responseAccess']['jwt-token']; // Correct key
-
+        final token = responseData['data']['responseAccess']['jwt-token'];
+        print(_emailController.text);
+        print(_passwordController.text);
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
         print(token);
@@ -36,8 +33,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
         _showSuccessDialog(context, token);
       } else {
         final responseData = json.decode(response.body);
-        final message =
-            responseData['data']['data']; // Use 'message' from the response
+        final message = responseData['data']['data'];
 
         _showMessageWarning(
           context,
@@ -46,7 +42,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
         print("1");
       }
     } catch (e) {
-      print('Error:');
+      print(e);
       _showMessageWarning(context, "Error occurred");
     }
   }
@@ -106,12 +102,9 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
             top: 0,
             child: Container(
               width: 400,
-              color: Colors.red,
-              child: Image.asset(
-                'images/bg.jpg',
+              child: Container(
                 width: MediaQuery.of(context).size.width - 90,
                 height: 250,
-                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -136,10 +129,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                 child: Column(
                   children: [
                     spaceHeight,
-                    SvgPicture.asset(
+                    Image.asset(
                       'images/logo-app.jpeg',
-                      width: 50,
-                      height: 50,
+                      width: 70,
+                      height: 70,
                       fit: BoxFit.contain,
                     ),
                     spaceHeight,
@@ -195,13 +188,14 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   Widget _buildElevatedButton() {
     return ElevatedButton(
       onPressed: _handleLogin,
-      child: const SizedBox(
+      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+      child: Container(
         width: 280,
         height: 50,
         child: Center(
           child: Text(
             'Login',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
       ),
@@ -209,20 +203,41 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   }
 
   Widget _wrightContent(String text, String text2) {
-    return GestureDetector(
-      onTap: () {
-        Get.to(CreateAccountScreen(), transition: Transition.cupertino);
-      },
-      child: SizedBox(
-        width: 250,
-        height: 70,
-        child: Center(
-          child: Column(children: [
-            Text(text),
-            Text(text2),
-            Icon(Icons.air_rounded, color: Colors.blueAccent),
-          ]),
-        ),
+    return Container(
+      width: 250,
+      child: Center(
+        child: Column(children: [
+          Text(text),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateAccountScreen(),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromARGB(255, 244, 117, 54),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            child: Container(
+              width: 100,
+              height: 40,
+              alignment: Alignment.center,
+              child: Text(
+                "Create Account",
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ]),
       ),
     );
   }

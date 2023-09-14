@@ -15,19 +15,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Cardioc',
+      title: 'CardMonix',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: "/dashboard",
+      initialRoute: "/",
       routes: {
         '/': (context) => LoginSignupScreen(),
         '/signup': (context) => CreateAccountScreen(),
         '/otp': (context) => Otp(email: ""),
         '/dashboard': (context) => DashboardScreen(),
-      },
+      }, //8175588238 mon gran
     );
   }
 }
