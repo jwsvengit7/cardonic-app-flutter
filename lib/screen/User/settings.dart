@@ -93,7 +93,7 @@ class Setting extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  "Edit Account",
+                  "Add Account",
                   style: TextStyle(fontSize: 20, color: color),
                 ),
                 Icon(Icons.account_box),

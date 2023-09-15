@@ -7,38 +7,57 @@ class Password extends StatefulWidget {
 
 class PasswordState extends State<Password> {
   SizedBox spaceHieigt = const SizedBox(height: 20);
+
+  final accountNumberController = TextEditingController();
+  SizedBox sizedBox = SizedBox(height: 20);
+
   @override
-  Widget build(BuildContext buildContext) {
+  void dispose() {
+    accountNumberController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Password"),
+        title: Text("Password"),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          const SizedBox(
-            width: 100,
-            height: 150,
-          ),
-          buildInputField(),
-          spaceHieigt,
-          spaceHieigt,
-          buildInputField(),
-          spaceHieigt,
-          _buildElevatedButton()
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: ListView(
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                sizedBox,
+                Image.asset("images/password.png"),
+                sizedBox,
+                buildInputField("Old Password"),
+                spaceHieigt,
+                spaceHieigt,
+                buildInputField("New Password"),
+                spaceHieigt,
+                spaceHieigt,
+                buildInputField("Re Enter New Password"),
+                spaceHieigt,
+                _buildElevatedButton()
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget buildInputField() {
+  Widget buildInputField(String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7),
-      child: TextField(
+      child: TextFormField(
         decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
+          labelText: text,
+          border: OutlineInputBorder(),
+          hintText: text,
         ),
       ),
     );
@@ -46,13 +65,25 @@ class PasswordState extends State<Password> {
 
   Widget _buildElevatedButton() {
     return ElevatedButton(
-        onPressed: () {},
-        child: const SizedBox(
-          width: 280,
-          height: 50,
-          child: Center(
-            child: Text('Change Password'),
+      onPressed: () {},
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color.fromARGB(255, 244, 117, 54),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+      child: Container(
+        width: 200,
+        height: 50,
+        alignment: Alignment.center,
+        child: Text(
+          "Change Password",
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.white,
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

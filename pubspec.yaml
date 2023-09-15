@@ -68,10 +68,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - images/logo.png
+     - images/account.png
      - images/logo-app.jpeg
-     - images/logo-event.png
-     - images/bg.jpg
+     - images/people.png
+     - images/payment.png
+     - images/ca.png
+     - images/giftcard.png
+     - images/password.png
 
   # flutter_native_splash:
   # image: "images/logo.png"  # Path to your logo image

@@ -1,54 +1,135 @@
+import 'dart:convert';
+import 'package:cardmonix/screen/User/dto/response/Bank.dart';
+import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Account extends StatefulWidget {
-  const Account({super.key});
-
   @override
   AccountState createState() => AccountState();
 }
 
 class AccountState extends State<Account> {
+  final banks = <Bank>[];
+  Bank? selectedBank;
+  String accountName = '';
+  bool isFetchingAccountName = false;
+  bool isSaveButtonDisabled = true;
+
+  final accountNumberController = TextEditingController();
+  SizedBox sizedBox = SizedBox(height: 20);
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBanks();
+  }
+
+  Future<void> fetchBanks() async {
+    try {
+      final response =
+          await http.get(Uri.parse('https://api.paystack.co/bank'));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final bankData = data['data'];
+
+        setState(() {
+          banks.addAll(bankData.map<Bank>((bankJson) {
+            return Bank(
+              name: bankJson['name'],
+              code: bankJson['code'],
+            );
+          }));
+        });
+      } else {
+        print('Failed to fetch banks');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void dispose() {
+    accountNumberController.dispose();
+    super.dispose();
+  }
+
+  void _saveAccount() {
+    print(accountName);
+    print(accountNumberController.text);
+    print(selectedBank!.name);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Bank Account"),
+        title: Text("Add Bank Account"),
       ),
-      body: Container(
-        padding: EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: ListView(
           children: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 20,
+                sizedBox,
+                Image.asset("images/account.png"),
+                sizedBox,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: DropdownButtonFormField<Bank>(
+                        value: selectedBank,
+                        decoration: const InputDecoration(
+                          labelText: 'Select a bank',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                        items: banks.map((bank) {
+                          return DropdownMenuItem<Bank>(
+                            value: bank,
+                            child: SizedBox(
+                              width: 300,
+                              child: Text('${bank.name}'),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (Bank? value) {
+                          setState(() {
+                            selectedBank = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                Icon(
-                  Icons.account_balance,
-                  size: 100,
-                  color: Colors.blue,
+                sizedBox,
+                TextFormField(
+                  controller: accountNumberController,
+                  onChanged: onAccountNumberChanged,
+                  decoration: const InputDecoration(
+                    labelText: 'Account Number',
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter account number',
+                  ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                buildInputField("Account Holder's Name", "John Doe"),
-                SizedBox(
-                  height: 20,
-                ),
-                buildInputField("Bank Name", "Bank of America"),
-                SizedBox(
-                  height: 20,
-                ),
-                buildInputField("Account Number", "1234 5678 9012 3456"),
-                SizedBox(
-                  height: 20,
-                ),
-                buildInputField("Routing Number", "987654321"),
-                SizedBox(
-                  height: 20,
-                ),
-                _buildSaveButton(),
+                sizedBox,
+                if (isFetchingAccountName)
+                  CircularProgressIndicator()
+                else if (accountName.isNotEmpty)
+                  Text(
+                    "Account Name: $accountName",
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                sizedBox,
+                buildSaveButton(context),
               ],
             ),
           ],
@@ -57,21 +138,64 @@ class AccountState extends State<Account> {
     );
   }
 
-  Widget buildInputField(String labelText, String initialValue) {
-    return TextFormField(
-      initialValue: initialValue,
-      decoration: InputDecoration(
-        labelText: labelText,
-        border: OutlineInputBorder(),
-      ),
-    );
+  void onAccountNumberChanged(String value) {
+    setState(() {
+      accountName = '';
+      isFetchingAccountName = false;
+      isSaveButtonDisabled = true;
+    });
+
+    if (value.length == 10) {
+      fetchAccountName(value);
+    }
   }
 
-  Widget _buildSaveButton() {
+  Future<void> fetchAccountName(String accountNumber) async {
+    if (selectedBank == null) {
+      return;
+    }
+
+    final bankCode = selectedBank!.code;
+
+    try {
+      setState(() {
+        isFetchingAccountName = true;
+      });
+
+      final response =
+          await APIService().getAccountName(accountNumber, bankCode);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final accountNameResponse = data['data']['account_name'] ?? 'NOT FOUND';
+
+        setState(() {
+          accountName = accountNameResponse;
+          isFetchingAccountName = false;
+          isSaveButtonDisabled = false;
+        });
+      } else {
+        setState(() {
+          accountName = 'NOT FOUND';
+          isFetchingAccountName = false;
+          isSaveButtonDisabled = true;
+        });
+        print("Failed to fetch account name");
+      }
+    } catch (e) {
+      setState(() {
+        isFetchingAccountName = false;
+        isSaveButtonDisabled = true;
+      });
+      print(e);
+    }
+  }
+
+  Widget buildSaveButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: isSaveButtonDisabled ? null : _saveAccount,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         child: Text(
           'Save Changes',
           style: TextStyle(
@@ -82,7 +206,7 @@ class AccountState extends State<Account> {
         ),
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue,
+        primary: isSaveButtonDisabled ? Colors.grey : Colors.blue,
       ),
     );
   }

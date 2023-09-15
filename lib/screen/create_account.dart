@@ -1,11 +1,17 @@
 import 'package:cardmonix/screen/Verification/otp_verification.dart';
 import 'package:cardmonix/screen/login_signup.dart';
+import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class CreateAccountScreen extends StatelessWidget {
+class CreateAccountScreen extends StatefulWidget {
+  @override
+  CreateAccountScreenState createState() => CreateAccountScreenState();
+}
+
+class CreateAccountScreenState extends State<CreateAccountScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _cpasswordController = TextEditingController();
@@ -13,178 +19,46 @@ class CreateAccountScreen extends StatelessWidget {
 
   SizedBox spaceHieigt = const SizedBox(height: 20);
 
-  String url = "http://192.168.2.159:8085/api/v1/auth/register";
   final _formKey = GlobalKey<FormState>();
 
-  CreateAccountScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Scaffold(
-        body: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              child: Container(
-                width: 400,
-                child: Container(
-                  width: MediaQuery.of(context).size.width - 90,
-                  height: 200,
-                ),
-              ),
-            ),
-            Positioned(
-              top: 100,
-              child: Container(
-                width: MediaQuery.of(context).size.width - 40,
-                height: 650,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 15,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Column(
-                    children: [
-                      spaceHieigt,
-                      Image.asset(
-                        'images/logo-app.jpeg',
-                        width: 70,
-                        height: 70,
-                        fit: BoxFit.contain,
-                      ),
-                      spaceHieigt,
-                      buildInputField(
-                        hintText: 'Username',
-                        controller: _usernameController,
-                      ),
-                      spaceHieigt,
-                      buildInputField(
-                        hintText: 'Email',
-                        controller: _emailController,
-                      ),
-                      spaceHieigt,
-                      buildInputField(
-                        hintText: 'Password',
-                        controller: _passwordController,
-                        obscureText: true,
-                      ),
-                      spaceHieigt,
-                      buildInputField(
-                        hintText: 'Re-Password',
-                        controller: _cpasswordController,
-                        obscureText: true,
-                      ),
-                      spaceHieigt,
-                      buildElevatedButton(context),
-                      spaceHieigt,
-                      _wrightContent("Already have an account", "Log In"),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildInputField({
-    required String hintText,
-    bool obscureText = false,
-    required TextEditingController controller,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: TextFormField(
-        obscureText: obscureText,
-        controller: controller,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter $hintText';
-          }
-          return null;
-        },
-      ),
-    );
-  }
-
-  Widget buildElevatedButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          _registerUser(context);
-        }
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red,
-      ),
-      child: Container(
-        width: 280,
-        height: 50,
-        child: const Center(
-          child: Text(
-            'Signup',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _registerUser(BuildContext context) async {
-    String email = _emailController.text;
-    String password = _passwordController.text;
-    String cpassword = _cpasswordController.text;
-    String username = _usernameController.text;
-    if (password != cpassword) {
+  void _registerUser() async {
+    if (_passwordController.text != _cpasswordController.text) {
       _showMessageWarning(context, "Password does not Match");
     }
+    try {
+      final response = await APIService().createAccount(
+          email: _emailController.text,
+          password: _passwordController.text,
+          username: _usernameController.text);
 
-    Map<String, dynamic> requestBody = {
-      'email': email,
-      'password': password,
-      'username': username,
-    };
-    Uri uri = Uri.parse(url);
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return LoadingSpinner();
-      },
-    );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final successMessage = responseData['data'];
+        print(successMessage);
 
-    http.Response response = await http.post(
-      uri,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(requestBody),
-    );
+        _showSuccessDialog(context, successMessage);
+      } else {
+        final responseData = json.decode(response.body);
+        final message = responseData['data']['data'];
 
-    _showResponseAlert(context, response);
+        _showMessageWarning(
+          context,
+          responseData['message'] ?? message.toString(),
+        );
+        print("1");
+      }
+    } catch (e) {
+      print(e);
+      _showMessageWarning(context, "Error occurred");
+    }
   }
 
-  void _showSuccessDialog(BuildContext context) {
+  void _showSuccessDialog(BuildContext context, String successMessage) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Registration'),
+          title: Text(successMessage),
           content: const Text('Otp Have been sent to your inbox'),
           actions: [
             TextButton(
@@ -242,9 +116,9 @@ class CreateAccountScreen extends StatelessWidget {
                 Navigator.of(context).pop();
 
                 if (response.statusCode == 201) {
-                  _showSuccessDialog(context);
+                  _showSuccessDialog(context, message);
                 } else {
-                  _showSuccessDialog(context);
+                  _showSuccessDialog(context, message);
                 }
               },
               child: Text('OK'),
@@ -286,6 +160,129 @@ class CreateAccountScreen extends StatelessWidget {
             ),
           ),
         ]),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            child: Container(
+              width: 400,
+              child: Container(
+                width: MediaQuery.of(context).size.width - 90,
+                height: 200,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 100,
+            child: Container(
+              width: MediaQuery.of(context).size.width - 40,
+              height: 650,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 15,
+                    spreadRadius: 5,
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Column(
+                  children: [
+                    spaceHieigt,
+                    Image.asset(
+                      'images/logo-app.jpeg',
+                      width: 70,
+                      height: 70,
+                      fit: BoxFit.contain,
+                    ),
+                    spaceHieigt,
+                    buildInputField(
+                      hintText: 'Username',
+                      controller: _usernameController,
+                    ),
+                    spaceHieigt,
+                    buildInputField(
+                      hintText: 'Email',
+                      controller: _emailController,
+                    ),
+                    spaceHieigt,
+                    buildInputField(
+                      hintText: 'Password',
+                      controller: _passwordController,
+                      obscureText: true,
+                    ),
+                    spaceHieigt,
+                    buildInputField(
+                      hintText: 'Re-Password',
+                      controller: _cpasswordController,
+                      obscureText: true,
+                    ),
+                    spaceHieigt,
+                    buildElevatedButton(context),
+                    spaceHieigt,
+                    _wrightContent("Already have an account", "Log In"),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildInputField({
+    required String hintText,
+    bool obscureText = false,
+    required TextEditingController controller,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: TextFormField(
+        obscureText: obscureText,
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter $hintText';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget buildElevatedButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: _registerUser,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.red,
+      ),
+      child: Container(
+        width: 280,
+        height: 50,
+        child: const Center(
+          child: Text(
+            'Signup',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
       ),
     );
   }
