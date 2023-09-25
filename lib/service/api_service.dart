@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cardmonix/helpers/constants.dart';
 import 'package:http/http.dart' as http;
@@ -40,7 +39,6 @@ class APIService {
         return http.Response(response.body, response.statusCode);
       }
     } catch (e) {
-      print('Error: $e');
       return http.Response('Error: $e', 500);
     }
   }
@@ -71,7 +69,9 @@ class APIService {
     );
   }
 
-  Future<http.Response> fetchBalance(var savedToken) async {
+// COIN
+
+  Future<http.Response> fetchUserDetails(var savedToken) async {
     return http.get(
       Uri.parse("${Constants.BASE_URL}/api/v1/user/user-details"),
       headers: {
@@ -93,23 +93,34 @@ class APIService {
     return http.get(
       Uri.parse("${Constants.BASE_URL}/api/v1/giftcards/all-giftcard"),
       headers: {
-        'Authorization': 'Beaer $saveToken',
+        'Authorization': 'Bearer $saveToken',
       },
     );
+  }
+
+  Future<http.Response> createGiftcard(var saveToken, var name, var amount) {
+    return http.post(
+        Uri.parse("${Constants.BASE_URL}/api/v1/giftcards//create-giftcard"),
+        headers: {
+          'Authorization': 'Bearer $saveToken',
+        },
+        body: jsonEncode({"name": name, "amount": amount}));
   }
 
   Future<http.Response> getWallet(var saveToken) {
     return http
         .get(Uri.parse("${Constants.BASE_URL}/api/v1/user/wallets"), headers: {
-      'Authorization': 'Beaer $saveToken',
+      'Authorization': 'Bearer $saveToken',
     });
   }
 
-  Future<http.Response> get_account(var saveToken) {
+  // Account Details
+
+  Future<http.Response> get_account(var saveToken, var id) async {
     return http.get(
-        Uri.parse("${Constants.BASE_URL}/api/v1/account/get-my-account"),
+        Uri.parse("${Constants.BASE_URL}/api/v1/account/get-my-account/$id"),
         headers: {
-          'Authorization': 'Beaer $saveToken',
+          'Authorization': 'Bearer $saveToken',
         });
   }
 
@@ -131,17 +142,69 @@ class APIService {
   }
 
   Future<http.Response> saveAccount(
-      String accountNumber, String bankCode, String accountName) {
-    return http.post(
-        Uri.parse("${Constants.BASE_URL}/api/v1/account/saveAccount"),
+    String saveToken,
+    String accountNumber,
+    String bankName,
+    String accountName,
+  ) async {
+    final Uri uri =
+        Uri.parse("${Constants.BASE_URL}/api/v1/account/saveAccount");
+
+    final headers = {
+      'Authorization': 'Bearer $saveToken',
+      'Content-Type': 'application/json', // Specify the content type
+    };
+
+    final requestBody = {
+      "accountNumber": accountNumber,
+      "bankName": bankName,
+      "accountName": accountName,
+    };
+
+    final response = await http.post(
+      uri,
+      headers: headers,
+      body: jsonEncode(requestBody),
+    );
+
+    return response;
+  }
+
+// DEPOSIT SERVICE
+
+  Future<http.Response> get_deposit(var saveToken) {
+    return http.get(
+        Uri.parse("${Constants.BASE_URL}/api/v1/deposit/get-deposit-byUser"),
         headers: {
-          'Authorization': 'Beaer $getStoredToken()',
-        },
-        body: jsonEncode({
-          'account_number': accountNumber,
-          'bank_code': bankCode,
-          'currency': 'NGN'
-        }));
+          'Authorization': 'Bearer $saveToken',
+        });
+  }
+
+  Future<http.Response> getAlldeposit(var saveToken) {
+    return http.get(
+        Uri.parse("${Constants.BASE_URL}/api/v1/deposit/get-all-deposit"),
+        headers: {
+          'Authorization': 'Bearer $saveToken',
+        });
+  }
+
+  Future<http.Response> tradeCoin(var saveToken, var coin, var amount) async {
+    try {
+      var response = await http.post(
+          Uri.parse("${Constants.BASE_URL}/api/v1/deposit/buy-coin"),
+          headers: {
+            'Authorization': 'Bearer $saveToken',
+          },
+          body: jsonEncode({"amount": amount, "coin": coin}));
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        return http.Response(response.body, response.statusCode);
+      }
+    } catch (e) {
+      print('Error: $e');
+      return http.Response('Error: $e', 500);
+    }
   }
 
   Future<String?> getStoredToken() async {

@@ -26,3 +26,26 @@ class Coin {
     );
   }
 }
+
+class CoinsResponse {
+  final List<Coin> coins;
+
+  CoinsResponse({required this.coins});
+
+  factory CoinsResponse.fromJson(Map<String, dynamic> json) {
+    final List<dynamic> content = json['data']['content'];
+
+    return CoinsResponse(
+      coins: content.map((coinJson) {
+        return Coin(
+          coin_id: coinJson['coin_id'],
+          name: coinJson['name'],
+          image: coinJson['image'],
+          current_price: coinJson['current_price'],
+          old_price: coinJson['old_price'],
+          activate: coinJson['activate'],
+        );
+      }).toList(),
+    );
+  }
+}

@@ -8,12 +8,16 @@ class Password extends StatefulWidget {
 class PasswordState extends State<Password> {
   SizedBox spaceHieigt = const SizedBox(height: 20);
 
-  final accountNumberController = TextEditingController();
+  final oldPasswordController = TextEditingController();
+  final passwordController = TextEditingController();
+  final cpasswordController = TextEditingController();
   SizedBox sizedBox = SizedBox(height: 20);
 
   @override
   void dispose() {
-    accountNumberController.dispose();
+    oldPasswordController.dispose();
+    passwordController.dispose();
+    cpasswordController.dispose();
     super.dispose();
   }
 

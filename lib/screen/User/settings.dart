@@ -1,3 +1,4 @@
+import 'package:cardmonix/screen/User/dto/response/UserDetails.dart';
 import 'package:cardmonix/screen/User/setting/account.dart';
 import 'package:cardmonix/screen/User/setting/contact.dart';
 import 'package:cardmonix/screen/User/setting/graph.dart';
@@ -7,8 +8,13 @@ import 'package:cardmonix/screen/User/setting/card.dart';
 import 'package:cardmonix/screen/User/setting/password.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class Setting extends StatelessWidget {
   Color color = Color.fromARGB(255, 237, 70, 41);
+  UserData userData;
+
+  Setting({required this.userData});
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Settings")),
@@ -130,7 +136,8 @@ class Setting extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Contact()),
+                MaterialPageRoute(
+                    builder: (context) => Contact(userDetails: userData)),
               );
             },
             child: Row(

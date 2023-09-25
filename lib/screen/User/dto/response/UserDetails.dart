@@ -49,26 +49,29 @@ class Balance {
 }
 
 class UserData {
+  final int? id;
   final String? email;
   final String? user_name;
   final String? phone;
   final String? dob;
-  final String profile;
-  final String role;
-  final Balance balance;
+  final String? profile;
+  final String? role;
+  final Balance? balance;
 
   UserData({
-    required this.email,
-    required this.user_name,
-    this.phone,
-    this.dob,
-    required this.profile,
-    required this.role,
-    required this.balance,
+     this.id,
+     this.email,
+     this.user_name,
+     this.phone,
+     this.dob,
+     this.profile,
+     this.role,
+     this.balance,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
     return UserData(
+      id: json['id'],
       email: json['email'],
       user_name: json['user_name'],
       phone: json['phone'],

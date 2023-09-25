@@ -1,12 +1,11 @@
 import 'package:cardmonix/screen/User/dto/response/CoinsResponse.dart';
-import 'package:cardmonix/screen/User/dto/response/UserDetails.dart';
-import 'package:cardmonix/screen/User/giftcards/giftcardsItem.dart';
-import 'package:cardmonix/screen/User/settings.dart';
-import 'package:cardmonix/screen/Verification/otp_verification.dart';
-import 'package:cardmonix/service/api_service.dart';
+import 'package:cardmonix/screen/User/dto/response/Giftcard.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/User/coins/coins.dart';
 import 'package:cardmonix/screen/User/footer.dart';
+import 'package:cardmonix/screen/User/Drawers.dart';
+import 'package:cardmonix/screen/User/dto/response/UserDetails.dart';
+import 'package:cardmonix/service/api_service.dart';
 import 'dart:convert';
 
 class DashboardScreen extends StatefulWidget {
@@ -16,14 +15,32 @@ class DashboardScreen extends StatefulWidget {
 
 class DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String email = '';
-  String user_name = '';
-  String profile = '';
-  String role = '';
-  BigInt? amount;
 
   List<Coin> coinData = [];
-  dynamic userInfo;
+  UserData? userInfo;
+  List<Giftcard> giftcard = [];
+  double amountApp = 0;
+
+  Future<void> fetchGifcard() async {
+    try {
+      final savedToken = await APIService().getStoredToken();
+      final response = await APIService().getAllGiftcard(savedToken);
+      final Map<String, dynamic> data = json.decode(response.body);
+      final List<dynamic> content = data['data'];
+      giftcard = content.map((coinJson) {
+        return Giftcard(
+          image: coinJson['image'],
+          type: coinJson['type'],
+          price: coinJson['price'],
+        );
+      }).toList();
+      print(content);
+      print(giftcard[0].image);
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<void> fetchData() async {
     try {
@@ -45,7 +62,6 @@ class DashboardScreenState extends State<DashboardScreen> {
             );
           }).toList();
         });
-     
       } else {
         print("Error");
         throw Exception('Failed to load data');
@@ -58,42 +74,34 @@ class DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> fetchBalance() async {
     final savedToken = await APIService().getStoredToken();
-    print("Bearer " + savedToken!);
 
     try {
-      final response = await APIService().fetchBalance(savedToken);
-      print(savedToken);
+      final response = await APIService().fetchUserDetails(savedToken);
 
       if (response.statusCode == 200) {
         final dynamic userDetailsJson = json.decode(response.body);
 
-        print(userDetailsJson["data"]);
-        final UserDetails userDetails = UserDetails.fromJson(userDetailsJson);
-        final Balance balanceData = userDetails.data.balance;
-        print(balanceData);
-        print(balanceData.currency);
-
-        // ignore: unnecessary_null_comparison
-        if (balanceData != null) {
-          amount = balanceData.amount;
-        } else {
-          amount = BigInt.two;
-        }
-
-        if (userDetails.data.email != null) {
-          email = userDetails.data.email!;
-        } else {
-          email = '********';
-        }
-
+        final dynamic userdetails = userDetailsJson["data"];
         setState(() {
-          email = userDetails.data.email!;
-          user_name = userDetails.data.user_name!;
-          profile = userDetails.data.profile;
-          role = userDetails.data.role;
-          print(amount);
-          print("****************************");
+          userInfo = UserData(
+            id: userdetails['id'],
+            email: userdetails['email'],
+            user_name: userdetails['user_name'],
+            phone: userdetails['phone'],
+            dob: userdetails['dob'],
+            profile: userdetails['profile'],
+            role: userdetails['role'],
+            balance: Balance(
+              amount: BigInt.zero,
+              balanceId: BigInt.zero,
+              currency: "NGN",
+            ),
+          );
         });
+        print(userdetails["balance"]);
+        print(userdetails["balance"]["amount"]);
+        amountApp = userdetails["balance"]["amount"];
+        print(amountApp);
       } else {
         print("Failed to fetch data. Status code: ${response.statusCode}");
       }
@@ -105,6 +113,7 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
+    fetchGifcard();
 
     fetchData();
     fetchBalance();
@@ -114,237 +123,167 @@ class DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 237, 70, 41),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  const Text(
-                    "Welcome",
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    user_name,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                  ),
-                  Text(
-                    email,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.dashboard),
-              title: const Text('Dashboard'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.card_giftcard),
-              title: const Text('Sell Giftcards'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Item()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.currency_bitcoin),
-              title: const Text('Exchange Coin'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.history),
-              title: const Text('History'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Setting()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Otp(email: "")),
-                );
-              },
-            ),
-          ],
+      drawer: Drawers(userData: userInfo ?? UserData(), card: giftcard),
+      body: SafeArea(
+        child: FutureBuilder(
+          future: fetchData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return buildMainUI();
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text("An error occurred: ${snapshot.error}"),
+              );
+            } else {
+              return buildMainUI();
+            }
+          },
         ),
       ),
-      body: SafeArea(
-          child: Stack(
-        children: [
-          Container(
-            width: 400,
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  height: 100,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () {
-                          _scaffoldKey.currentState!.openDrawer();
-                        },
-                        child: const SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: Icon(Icons.menu, color: Colors.red, size: 35),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 200,
-                        height: 70,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 100,
-                              alignment: Alignment.center,
-                              child: Image.asset(
-                                "images/logo-app.jpeg",
-                                width: 70,
-                                height: 70,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
+      bottomNavigationBar: Footer(),
+    );
+  }
+
+  Widget buildMainUI() {
+    return Stack(
+      children: [
+        Container(
+          width: 400,
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                height: 100,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        _scaffoldKey.currentState!.openDrawer();
+                      },
+                      child: const SizedBox(
                         width: 40,
                         height: 40,
-                        child: Icon(
-                          Icons.notification_add,
-                          size: 30,
-                          color: Colors.red,
-                        ),
+                        child: Icon(Icons.menu, color: Colors.red, size: 35),
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(
+                      width: 200,
+                      height: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 100,
+                            alignment: Alignment.center,
+                            child: Image.asset(
+                              "images/logo-app.jpeg",
+                              width: 70,
+                              height: 70,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: Icon(
+                        Icons.notification_add,
+                        size: 30,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  flex: 1,
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: <Widget>[
-                      HomeFirst(coinData, amount: amount),
-                      Container(
-                        width: MediaQuery.devicePixelRatioOf(context),
-                        height: 600,
-                        color: Colors.white,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Positioned(
-                              top: 0,
-                              child: Container(
-                                alignment: Alignment.center,
-                                width: 400,
-                                height: 80,
-                                child: Image.asset(
-                                  "images/logo-app.jpeg",
-                                  width: 60,
-                                  height: 60,
+              ),
+              Expanded(
+                flex: 1,
+                child: ListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    HomeFirst(coinData, amount: amountApp),
+                    Container(
+                      width: MediaQuery.devicePixelRatioOf(context),
+                      height: 600,
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Positioned(
+                            top: 0,
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: 400,
+                              height: 80,
+                              child: Image.asset(
+                                "images/logo-app.jpeg",
+                                width: 60,
+                                height: 60,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width - 40,
+                            height: 140,
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 15,
+                                  spreadRadius: 5,
                                 ),
-                              ),
+                              ],
                             ),
-                            Container(
-                              width: MediaQuery.of(context).size.width - 40,
-                              height: 140,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.3),
-                                    blurRadius: 15,
-                                    spreadRadius: 5,
-                                  ),
-                                ],
-                              ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width - 40,
+                            height: 140,
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 15,
+                                  spreadRadius: 5,
+                                ),
+                              ],
                             ),
-                            Container(
-                              width: MediaQuery.of(context).size.width - 40,
-                              height: 140,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.3),
-                                    blurRadius: 15,
-                                    spreadRadius: 5,
-                                  ),
-                                ],
-                              ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width - 40,
+                            height: 140,
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 15,
+                                  spreadRadius: 5,
+                                ),
+                              ],
                             ),
-                            Container(
-                              width: MediaQuery.of(context).size.width - 40,
-                              height: 140,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.3),
-                                    blurRadius: 15,
-                                    spreadRadius: 5,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      )),
-      bottomNavigationBar: Footer(),
+        ),
+      ],
     );
   }
 }

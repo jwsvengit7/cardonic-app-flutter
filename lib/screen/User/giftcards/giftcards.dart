@@ -1,6 +1,10 @@
+import 'package:cardmonix/screen/User/dto/response/UserDetails.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class Giftcards extends StatelessWidget {
+  UserData userData;
+  Giftcards({required this.userData});
   SizedBox sizedBox = const SizedBox(height: 10);
   @override
   Widget build(BuildContext context) {

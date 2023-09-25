@@ -25,9 +25,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => LoginSignupScreen(),
         '/signup': (context) => CreateAccountScreen(),
-        '/otp': (context) => Otp(email: ""),
         '/dashboard': (context) => DashboardScreen(),
-      }, //8175588238 mon gran
+      },
     );
   }
 }

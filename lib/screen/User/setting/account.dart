@@ -25,7 +25,7 @@ class AccountState extends State<Account> {
     fetchBanks();
   }
 
-  Future<void> fetchBanks() async {
+  void fetchBanks() async {
     try {
       final response =
           await http.get(Uri.parse('https://api.paystack.co/bank'));
@@ -50,16 +50,32 @@ class AccountState extends State<Account> {
     }
   }
 
+  void _saveAccount() async {
+    try {
+      isFetchingAccountName = true;
+      final token = await APIService().getStoredToken();
+      print(token);
+
+      final response = await APIService().saveAccount(token!,
+          accountNumberController.text, selectedBank!.name, accountName);
+      isFetchingAccountName = false;
+      final Map<String, dynamic> api = json.decode(response.body);
+      final dynamic data = api["data"];
+      if (response.statusCode == 409) {
+        _popup(response.statusCode, data["message"]);
+        return;
+      }
+      _popup(response.statusCode, data);
+    } catch (e) {
+      _popup(400, "Try again");
+      print(e);
+    }
+  }
+
   @override
   void dispose() {
     accountNumberController.dispose();
     super.dispose();
-  }
-
-  void _saveAccount() {
-    print(accountName);
-    print(accountNumberController.text);
-    print(selectedBank!.name);
   }
 
   @override
@@ -118,16 +134,9 @@ class AccountState extends State<Account> {
                   ),
                 ),
                 sizedBox,
-                if (isFetchingAccountName)
-                  CircularProgressIndicator()
-                else if (accountName.isNotEmpty)
-                  Text(
-                    "Account Name: $accountName",
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                Container(
+                  child: _load(isFetchingAccountName, accountName),
+                ),
                 sizedBox,
                 buildSaveButton(context),
               ],
@@ -136,6 +145,20 @@ class AccountState extends State<Account> {
         ),
       ),
     );
+  }
+
+  _load(bool isFetchingAccountName, String accountName) {
+    if (isFetchingAccountName) {
+      return CircularProgressIndicator();
+    } else if (accountName.isNotEmpty) {
+      return Text(
+        "Account Name: $accountName",
+        style: TextStyle(
+          color: Colors.green,
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    }
   }
 
   void onAccountNumberChanged(String value) {
@@ -195,7 +218,7 @@ class AccountState extends State<Account> {
     return ElevatedButton(
       onPressed: isSaveButtonDisabled ? null : _saveAccount,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         child: Text(
           'Save Changes',
           style: TextStyle(
@@ -206,8 +229,28 @@ class AccountState extends State<Account> {
         ),
       ),
       style: ElevatedButton.styleFrom(
-        primary: isSaveButtonDisabled ? Colors.grey : Colors.blue,
+        backgroundColor: isSaveButtonDisabled ? Colors.grey : Colors.blue,
       ),
+    );
+  }
+
+  void _popup(var statusCode, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(message),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../dto/response/CoinsResponse.dart';
 
+// ignore: must_be_immutable
 class HomeFirst extends StatefulWidget {
   final List<Coin> coinData;
-  BigInt? amount;
+  double amount;
 
   HomeFirst(this.coinData, {required this.amount});
 
@@ -21,67 +22,75 @@ class HomeFirstState extends State<HomeFirst> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Container(
-          width: 390,
-          height: 250,
-          color: Colors.white70,
-          padding: const EdgeInsets.only(top: 40),
-          child: Positioned(
-            bottom: 30,
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 15,
-                    // spreadRadius: 5,
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  spaceHeight,
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      '\$${widget.amount == null ? 0 : widget.amount}.00',
-                      style: const TextStyle(
-                        color: Color.fromARGB(184, 255, 255, 255),
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
+        Stack(
+          children: [
+            Container(
+              width: 390,
+              height: 250,
+              color: Colors.white70,
+              padding: const EdgeInsets.only(top: 40),
+            ),
+            Positioned(
+              bottom: 30,
+              left: 10,
+              top: 50,
+              right: 10,
+              child: Container(
+                width: 390,
+                height: 200,
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 15,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    spaceHeight,
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        '\$${widget.amount == null ? 0 : widget.amount}',
+                        style: const TextStyle(
+                          color: Color.fromARGB(184, 255, 255, 255),
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  spaceHeight,
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      'Monthly Status:',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
+                    spaceHeight,
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'Monthly Status:',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      'Active',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'Active',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
         Container(
           width: double.infinity,

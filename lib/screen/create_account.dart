@@ -19,7 +19,7 @@ class CreateAccountScreenState extends State<CreateAccountScreen> {
 
   SizedBox spaceHieigt = const SizedBox(height: 20);
 
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
 
   void _registerUser() async {
     if (_passwordController.text != _cpasswordController.text) {
@@ -31,29 +31,17 @@ class CreateAccountScreenState extends State<CreateAccountScreen> {
           password: _passwordController.text,
           username: _usernameController.text);
 
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        final successMessage = responseData['data'];
-        print(successMessage);
-
-        _showSuccessDialog(context, successMessage);
-      } else {
-        final responseData = json.decode(response.body);
-        final message = responseData['data']['data'];
-
-        _showMessageWarning(
-          context,
-          responseData['message'] ?? message.toString(),
-        );
-        print("1");
-      }
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final dynamic successMessage = responseData['data'];
+      print(successMessage);
+      _showSuccessDialog(context, successMessage);
     } catch (e) {
       print(e);
       _showMessageWarning(context, "Error occurred");
     }
   }
 
-  void _showSuccessDialog(BuildContext context, String successMessage) {
+  void _showSuccessDialog(BuildContext context, var successMessage) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
