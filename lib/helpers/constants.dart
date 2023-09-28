@@ -9,4 +9,5 @@ class Constants {
     dotenv.load();
     return dotenv.env['DEBUG'] == 'true';
   }
+
 }
