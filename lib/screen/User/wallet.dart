@@ -1,6 +1,6 @@
 import 'package:cardmonix/screen/User/dashboard.dart';
-import 'package:cardmonix/screen/User/dto/response/CoinsResponse.dart';
-import 'package:cardmonix/screen/User/dto/response/WalletResponse.dart';
+import 'package:cardmonix/dto/response/CoinsResponse.dart';
+import 'package:cardmonix/dto/response/WalletResponse.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable

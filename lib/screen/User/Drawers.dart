@@ -1,5 +1,5 @@
 import 'package:cardmonix/screen/User/dto/response/Giftcard.dart';
-import 'package:cardmonix/screen/User/dto/response/UserDetails.dart';
+import 'package:cardmonix/dto/response/UserDetails.dart';
 import 'package:cardmonix/screen/User/giftcards/giftcards.dart';
 import 'package:cardmonix/screen/User/history.dart';
 import 'package:cardmonix/screen/login_signup.dart';

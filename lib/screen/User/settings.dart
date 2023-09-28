@@ -1,4 +1,4 @@
-import 'package:cardmonix/screen/User/dto/response/UserDetails.dart';
+import 'package:cardmonix/dto/response/UserDetails.dart';
 import 'package:cardmonix/screen/User/setting/account.dart';
 import 'package:cardmonix/screen/User/setting/contact.dart';
 import 'package:cardmonix/screen/User/setting/graph.dart';

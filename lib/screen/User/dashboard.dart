@@ -1,12 +1,12 @@
-import 'package:cardmonix/screen/User/dto/response/CoinsResponse.dart';
-import 'package:cardmonix/screen/User/dto/response/Giftcard.dart';
-import 'package:cardmonix/screen/User/dto/response/WalletResponse.dart';
+import 'package:cardmonix/dto/response/CoinsResponse.dart';
+import 'package:cardmonix/dto/response/Giftcard.dart';
+import 'package:cardmonix/dto/response/WalletResponse.dart';
 import 'package:cardmonix/screen/User/wallet.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/User/coins/coins.dart';
 import 'package:cardmonix/screen/User/footer.dart';
 import 'package:cardmonix/screen/User/Drawers.dart';
-import 'package:cardmonix/screen/User/dto/response/UserDetails.dart';
+import 'package:cardmonix/dto/response/UserDetails.dart';
 import 'package:cardmonix/service/api_service.dart';
 import 'dart:convert';
 

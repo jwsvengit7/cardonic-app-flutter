@@ -1,7 +1,5 @@
-import 'dart:ffi';
-
 class Request {
-  static Map<String, dynamic> traderequest(Double amount, String coin) {
+  static Map<String, dynamic> traderequest(double amount, String coin) {
     return {
       "amount": amount,
       "coin": coin,
@@ -45,7 +43,5 @@ class Request {
 }
 
 class Home {
-
-
-Map<String, String>  r =  Request.createGiftcard("2","2");
+  Map<String, String> r = Request.createGiftcard("2", "2");
 }

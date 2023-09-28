@@ -1,7 +1,8 @@
 import 'dart:convert';
-
+import 'dart:ffi';
 import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class CoinDetailScreen extends StatefulWidget {
   final String coinName;
@@ -42,13 +43,43 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
       final String? saveToken = await APIService().getStoredToken();
       print(saveToken);
       final response = await APIService().tradeCoin(saveToken!, coin, amount);
-      print(response.statusCode);
+      print(response.body);
       final Map<String, dynamic> data = json.decode(response.body);
       final dynamic api = data["data"];
       print(api);
     } catch (e) {
       print(e);
     }
+  }
+
+  Widget modarsuccess(){
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(50),
+        child: Column(
+          children: [
+          AnimatedButton(
+            text: "Warning Dialog",
+            color:Colors.orange,
+            pressEvent:(){
+              AwesomeDialog(
+                context:context,
+                dialogType:DialogType.warning,
+                animType:AnimType.topSlide,
+                showCloseIcon:true,
+
+                title:"Warning",
+                desc:"This is it",
+                btnCancelOnPress:(){},
+                btnOkOnPress:(){},
+              ).show();
+
+            },
+          ),
+        ]),
+
+      ),
+    )
   }
 
   @override
