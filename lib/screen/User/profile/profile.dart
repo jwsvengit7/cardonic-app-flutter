@@ -2,7 +2,7 @@ import 'package:cardmonix/dto/response/UserDetails.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
-  UserData userData;
+  final UserData userData;
   Profile({required this.userData});
   ProfileState createState() => ProfileState();
 }
@@ -41,16 +41,21 @@ class ProfileState extends State<Profile> {
                   color: Colors.white30,
                   child: Column(
                     children: <Widget>[
-                      CircleAvatar(
-                        radius: 60.0,
-                        backgroundColor: Colors.white30,
-                        child: Image.network(widget.userData.profile!,
-                            height: 70, width: 70),
+                      ClipOval(
+                        child: Image.network(
+                          widget.userData.profile!,
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
                       ),
                       Text(
                         widget.userData.user_name!,
                         style: const TextStyle(
-                          fontSize: 24.0,
+                          fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -71,7 +76,7 @@ class ProfileState extends State<Profile> {
             const Padding(
               padding: EdgeInsets.all(20.0),
               child: Text(
-                'History',
+                'Total ',
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -80,15 +85,15 @@ class ProfileState extends State<Profile> {
             ),
             // Example list of history items
             const ListTile(
-              leading: Icon(Icons.work),
-              title: Text('Work History 1'),
-              subtitle: Text('Position: Senior Developer\nCompany: ABC Inc.'),
+              leading: Icon(Icons.money_off_csred),
+              title: Text('Total Deposit'),
+              subtitle: Text('2'),
             ),
             Divider(),
             const ListTile(
-              leading: Icon(Icons.work),
-              title: Text('Work History 2'),
-              subtitle: Text('Position: Product Manager\nCompany: XYZ Corp.'),
+              leading: Icon(Icons.account_balance_wallet),
+              title: Text('Total Withdraw'),
+              subtitle: Text('43'),
             ),
           ],
         ),

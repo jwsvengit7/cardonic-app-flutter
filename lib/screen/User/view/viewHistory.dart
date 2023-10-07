@@ -2,7 +2,7 @@ import 'package:cardmonix/screen/User/history.dart';
 import 'package:flutter/material.dart';
 
 class Views extends StatelessWidget {
-  HistoryItem item;
+  final HistoryItem item;
 
   Views({super.key, required this.item});
 

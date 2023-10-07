@@ -9,7 +9,7 @@ import 'package:cardmonix/screen/User/settings.dart';
 
 class Drawers extends StatelessWidget {
   final UserData userData;
-  final List<Giftcard> card;
+  final Future<List<Giftcard>> card;
 
   const Drawers({super.key, required this.userData, required this.card});
 
