@@ -2,7 +2,7 @@ import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/create_account.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'dart:convert';
 import 'package:cardmonix/screen/User/dashboard.dart';
 
@@ -26,73 +26,46 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         final token = responseData['data']['responseAccess']['jwt-token'];
-        print(_emailController.text);
-        print(_passwordController.text);
+
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
         print(token);
-
-        _showSuccessDialog(context, token);
+        alert('Login succesful', "Success");
       } else {
+        print(response.statusCode);
         final responseData = json.decode(response.body);
         final message = responseData['data']['data'];
-
-        _showMessageWarning(
-          context,
-          responseData['message'] ?? message.toString(),
-        );
-        print("1");
+        alert(responseData['message'] ?? message.toString(), "Warning");
       }
     } catch (e) {
       print(e);
-      _showMessageWarning(context, "Error occurred");
+      alert("Error occured", "Warning");
     }
   }
 
-  void _showSuccessDialog(BuildContext context, String token) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Success'),
-          content: const Text('Success'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const DashboardScreen(),
-                  ),
-                );
-              },
-              child: const Text('Next'),
-            ),
-          ],
-        );
-      },
+  void _dashboard() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => DashboardScreen(),
+      ),
     );
   }
 
-  void _showMessageWarning(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(message),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
+  void _stay() {
+    return null;
+  }
+
+  void alert(String message, String type) {
+    AwesomeDialog(
+        context: context,
+        dialogType: type == "Warning" ? DialogType.warning : DialogType.success,
+        animType: AnimType.topSlide,
+        showCloseIcon: true,
+        title: type,
+        desc: message,
+        btnOkOnPress: () {
+          type == "Success" ? _dashboard() : _stay();
+        }).show();
   }
 
   @override
@@ -132,7 +105,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                   children: [
                     spaceHeight,
                     Image.asset(
-                      'images/logo-app.jpeg',
+                      'images/logo-app.png',
                       width: 70,
                       height: 70,
                       fit: BoxFit.contain,

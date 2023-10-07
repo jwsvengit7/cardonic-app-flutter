@@ -3,7 +3,7 @@ import 'package:cardmonix/screen/login_signup.dart';
 import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:http/http.dart' as http;
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'dart:convert';
 
 class CreateAccountScreen extends StatefulWidget {
@@ -21,11 +21,10 @@ class CreateAccountScreenState extends State<CreateAccountScreen> {
 
   SizedBox spaceHieigt = const SizedBox(height: 20);
 
-  // final _formKey = GlobalKey<FormState>();
-
   void _registerUser() async {
     if (_passwordController.text != _cpasswordController.text) {
-      _showMessageWarning(context, "Password does not Match");
+      alert("Password does not Match", "Warning");
+      return;
     }
     try {
       final response = await APIService().createAccount(
@@ -36,87 +35,14 @@ class CreateAccountScreenState extends State<CreateAccountScreen> {
       final Map<String, dynamic> responseData = json.decode(response.body);
       final dynamic successMessage = responseData['data'];
       print(successMessage);
-      _showSuccessDialog(context, successMessage);
+      if (successMessage == "") {
+        alert("Otp Have been sent to your inbox'", "Success");
+      }
+      alert(successMessage, "Success");
     } catch (e) {
       print(e);
-      _showMessageWarning(context, "Error occurred");
+      alert("Error occurred", "Warning");
     }
-  }
-
-  void _showSuccessDialog(BuildContext context, var successMessage) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(successMessage),
-          content: const Text('Otp Have been sent to your inbox'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Otp(email: _emailController.text)),
-                );
-              },
-              child: const Text('Next'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showMessageWarning(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Registration'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showResponseAlert(BuildContext context, http.Response response) {
-    Map<String, dynamic> responseBody = json.decode(response.body);
-    String title = response.statusCode == 201 ? 'Success' : 'Error';
-    String message = responseBody['data'];
-    print(response.statusCode);
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-
-                if (response.statusCode == 201) {
-                  _showSuccessDialog(context, message);
-                } else {
-                  _showSuccessDialog(context, message);
-                }
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Widget _wrightContent(String text, String text2) {
@@ -191,7 +117,7 @@ class CreateAccountScreenState extends State<CreateAccountScreen> {
                   children: [
                     spaceHieigt,
                     Image.asset(
-                      'images/logo-app.jpeg',
+                      'images/logo-app.png',
                       width: 70,
                       height: 70,
                       fit: BoxFit.contain,
@@ -275,6 +201,31 @@ class CreateAccountScreenState extends State<CreateAccountScreen> {
         ),
       ),
     );
+  }
+
+  void otp() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Otp(email: _emailController.text),
+      ),
+    );
+  }
+
+  void _stay() {
+    return null;
+  }
+
+  void alert(String message, String type) {
+    AwesomeDialog(
+        context: context,
+        dialogType: type == "Warning" ? DialogType.warning : DialogType.success,
+        animType: AnimType.topSlide,
+        showCloseIcon: true,
+        title: type,
+        desc: message,
+        btnOkOnPress: () {
+          type == "Success" ? otp() : _stay();
+        }).show();
   }
 }
 

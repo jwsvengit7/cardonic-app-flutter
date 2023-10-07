@@ -3,7 +3,7 @@ import 'package:cardmonix/screen/User/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 class Footer extends StatefulWidget {
-  UserData userData;
+  final UserData userData;
   Footer({required this.userData});
 
   @override

@@ -9,6 +9,8 @@ import 'package:cardmonix/screen/User/Drawers.dart';
 import 'package:cardmonix/dto/response/UserDetails.dart';
 import 'package:cardmonix/service/api_service.dart';
 import 'dart:convert';
+import 'dart:async';
+import 'dart:io';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -28,23 +30,30 @@ class DashboardScreenState extends State<DashboardScreen> {
   double amountApp = 0;
   List<WalletResponse> items = [];
 
-  Future<void> fetchGifcard() async {
+  Future<List<Giftcard>> fetchGifcard() async {
     try {
       final savedToken = await APIService().getStoredToken();
       final response = await APIService().getAllGiftcard(savedToken);
-      final Map<String, dynamic> data = json.decode(response.body);
-      final List<dynamic> content = data['data'];
-      giftcard = content.map((coinJson) {
-        return Giftcard(
-          image: coinJson['image'],
-          type: coinJson['type'],
-          price: coinJson['price'],
-        );
-      }).toList();
-      setState(() {});
-    } catch (e) {
-      print(e);
+      final Map<String, dynamic> body = json.decode(response.body);
+      final List<dynamic> list = body["data"];
+      if (response.statusCode == 200) {
+        return list.map((dynamic json) {
+          final coinJson = json as Map<String, dynamic>;
+
+          return Giftcard(
+            image: coinJson['image'],
+            type: coinJson['type'],
+            price: coinJson['price'],
+          );
+        }).toList();
+      }
+    } on SocketException {
+      await Future.delayed(const Duration(milliseconds: 1800));
+      throw Exception('No Internet Connection');
+    } on TimeoutException {
+      throw Exception('');
     }
+    throw Exception('error fetching data');
   }
 
   void getWallet() async {
@@ -107,7 +116,6 @@ class DashboardScreenState extends State<DashboardScreen> {
 
       if (response.statusCode == 200) {
         final dynamic userDetailsJson = json.decode(response.body);
-
         final dynamic userdetails = userDetailsJson["data"];
         setState(() {
           userInfo = UserData(
@@ -155,13 +163,15 @@ class DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: Drawers(userData: userInfo ?? UserData(), card: giftcard),
+      drawer: Drawer(
+          child:
+              Drawers(userData: userInfo ?? UserData(), card: fetchGifcard())),
       appBar: AppBar(
+        backgroundColor: Colors.white,
         toolbarHeight: 80,
         leadingWidth: MediaQuery.devicePixelRatioOf(context),
         title: Container(
           width: 390,
-          color: Colors.white,
           alignment: Alignment.centerRight,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,14 +184,13 @@ class DashboardScreenState extends State<DashboardScreen> {
                 child: const SizedBox(
                   width: 40,
                   height: 40,
-                  child: Icon(Icons.menu, color: Colors.red, size: 35),
                 ),
               ),
               Container(
                 height: 100,
                 alignment: Alignment.center,
                 child: Image.asset(
-                  "images/logo-app.jpeg",
+                  "images/logo-app.png",
                   width: 70,
                   height: 70,
                 ),

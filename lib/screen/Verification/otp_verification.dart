@@ -30,7 +30,7 @@ class _OtpState extends State<Otp> {
             height: 150,
             alignment: Alignment.center,
             child: Image.asset(
-              'images/logo-app.jpeg',
+              'images/logo-app.png',
               width: 70,
               height: 70,
             ),

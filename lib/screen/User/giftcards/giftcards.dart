@@ -1,11 +1,69 @@
 import 'package:cardmonix/dto/response/UserDetails.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'dart:io';
 
-// ignore: must_be_immutable
-class Giftcards extends StatelessWidget {
-  UserData userData;
+class Giftcards extends StatefulWidget {
+  final UserData userData;
   Giftcards({super.key, required this.userData});
+
+  _UploadImageScreenState createState() => _UploadImageScreenState();
+}
+
+class _UploadImageScreenState extends State<Giftcards> {
   SizedBox sizedBox = const SizedBox(height: 10);
+  File? image;
+  final _picker = ImagePicker();
+  bool showSpinner = false;
+
+  Future getImage() async {
+    final pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+
+    if (pickedFile != null) {
+      image = File(pickedFile.path);
+      setState(() {});
+    } else {
+      print('no image selected');
+    }
+  }
+
+  Future<void> uploadImage() async {
+    setState(() {
+      showSpinner = true;
+    });
+
+    var stream = new http.ByteStream(image!.openRead());
+    stream.cast();
+
+    var length = await image!.length();
+
+    var uri = Uri.parse('https://fakestoreapi.com/products');
+
+    var request = new http.MultipartRequest('POST', uri);
+
+    request.fields['title'] = "Static title";
+
+    var multiport = new http.MultipartFile('image', stream, length);
+
+    request.files.add(multiport);
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      setState(() {
+        showSpinner = false;
+      });
+      print('image uploaded');
+    } else {
+      print('failed');
+      setState(() {
+        showSpinner = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,14 +120,14 @@ class Giftcards extends StatelessWidget {
             ),
             sizedBox,
             ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () async {
+                await getImage();
+              },
               icon: const Icon(Icons.cloud_upload),
-              label: const Text("Upload Image"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                textStyle: const TextStyle(
+              label: const Text(
+                'Upload Image',
+                style: TextStyle(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -78,7 +136,7 @@ class Giftcards extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.redAccent,
                   minimumSize: const Size(200, 50),
                   textStyle: const TextStyle(
                     color: Colors.white,
@@ -86,7 +144,10 @@ class Giftcards extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                child: const Text("Sell Giftcard"),
+                child: const Text(
+                  "Sell Giftcard",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cardmonix/components/modar/Alert.dart';
 import 'package:cardmonix/dto/response/Bank.dart';
 import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
@@ -63,13 +64,13 @@ class AccountState extends State<Account> {
       isFetchingAccountName = false;
       final Map<String, dynamic> api = json.decode(response.body);
       final dynamic data = api["data"];
-      if (response.statusCode == 409) {
-        _popup(response.statusCode, data["message"]);
+      if (response.statusCode == 200) {
+        _popup(response.statusCode, data["message"], "Success");
         return;
       }
-      _popup(response.statusCode, data);
+      _popup(response.statusCode, data, "Warning");
     } catch (e) {
-      _popup(400, "Try again");
+      _popup(400, "Try again", "Warning");
       print(e);
     }
   }
@@ -236,23 +237,7 @@ class AccountState extends State<Account> {
     );
   }
 
-  void _popup(var statusCode, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(message),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
+  void _popup(var statusCode, String message, String type) {
+    return Alert().alert(message, type, context);
   }
 }

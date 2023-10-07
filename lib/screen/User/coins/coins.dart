@@ -2,10 +2,9 @@ import 'package:cardmonix/dto/response/CoinsResponse.dart';
 import 'package:cardmonix/screen/User/coins/CoinDetails.dart';
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class HomeFirst extends StatefulWidget {
   final List<Coin> coinData;
-  double amount;
+  final double amount;
 
   HomeFirst(this.coinData, {super.key, required this.amount});
 
@@ -55,7 +54,7 @@ class HomeFirstState extends State<HomeFirst> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        '\$${widget.amount ?? 0}',
+                        '\$${widget.amount}',
                         style: const TextStyle(
                           color: Color.fromARGB(184, 255, 255, 255),
                           fontSize: 25,

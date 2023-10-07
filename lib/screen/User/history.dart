@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:cardmonix/screen/User/dashboard.dart';
-import 'package:cardmonix/screen/User/profile/profile.dart';
 import 'package:cardmonix/screen/User/view/viewHistory.dart';
 import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +62,7 @@ class HistoryState extends State<History> {
             );
           }).toList();
         });
+        print(items.length);
       } else {
         print(response.statusCode);
       }

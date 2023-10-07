@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:cardmonix/components/modar/Alert.dart';
 import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:clipboard/clipboard.dart';
 
 class CoinDetailScreen extends StatefulWidget {
   final String coinName;
@@ -9,41 +9,50 @@ class CoinDetailScreen extends StatefulWidget {
   final String coinImage;
 
   const CoinDetailScreen({
-    super.key,
+    Key? key,
     required this.coinName,
     required this.coinPrice,
     required this.coinImage,
-  });
+  }) : super(key: key);
 
   @override
-  _CoinDetailScreenState createState() => _CoinDetailScreenState();
+  CoinDetailScreenState createState() => CoinDetailScreenState();
 }
 
-class _CoinDetailScreenState extends State<CoinDetailScreen> {
-  final String walletId =
-      "eyyfhke8chjnd84835434r3rdd4433r43r443343bkkdkcdcserfd";
-  double amount = 0.0;
-  var divider = const Divider();
-  void copyWalletIdToClipboard() {
-    //  FlutterClipboard.copy(walletId).then((value) {
-    //   // Show a snackbar or toast to indicate that the wallet ID is copied
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text('Wallet ID copied to clipboard'),
-    //     ),
-    //   );
-    // });
+class CoinDetailScreenState extends State<CoinDetailScreen> {
+  String walletId = '';
+  String imagePath = '';
+  TextEditingController field = TextEditingController();
+  String pasteValue = '';
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.coinName == "Bitcoin") {
+      walletId = "eyyfhke8chjnd84835434r3rdd4433r43r443343bkkdkcdcserfd";
+      imagePath = "images/coins/usdt.jpeg";
+    }
   }
 
-  void _buycoin(var coin, double amount) async {
-    try {
-      print(coin);
-      print(amount);
+  double amount = 0.0;
+  var divider = const Divider();
 
+  void copyWalletIdToClipboard() {
+    FlutterClipboard.copy(walletId).then((value) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Wallet ID copied to clipboard!"),
+        ),
+      );
+    });
+  }
+
+  void _buycoin(String coin, double amount) async {
+    try {
       final String? saveToken = await APIService().getStoredToken();
-      print(saveToken);
+
       final response = await APIService().tradeCoin(saveToken!, coin, amount);
-      print(response.body);
+
       final Map<String, dynamic> data = json.decode(response.body);
       final dynamic api = data["data"];
       print(api);
@@ -67,7 +76,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
               padding: const EdgeInsets.all(20.0),
               alignment: Alignment.center,
               child: Image.asset(
-                "images/coins/usdt.jpeg",
+                imagePath,
               ),
             ),
             ListTile(
@@ -92,10 +101,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
             ListTile(
               leading: const Icon(Icons.copy),
               title: Text('Wallet ID: $walletId'),
-              onTap: () {
-                // Add logic to copy the wallet ID to the clipboard
-                // You can use the clipboard package for this.
-              },
+              onTap: copyWalletIdToClipboard,
             ),
             divider,
             ListTile(
@@ -106,6 +112,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: TextField(
+                controller: field,
                 onChanged: (value) {
                   setState(() {
                     amount = double.tryParse(value) ?? 0.0;
