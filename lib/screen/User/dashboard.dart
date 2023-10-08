@@ -211,8 +211,9 @@ class DashboardScreenState extends State<DashboardScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return buildMainUI();
             } else if (snapshot.hasError) {
-              return Center(
-                child: Text("An error occurred: ${snapshot.error}"),
+              return const Center(
+                child:
+                    Text("An error occurred: Check Your Internet Connection"),
               );
             } else {
               return buildMainUI();
@@ -237,7 +238,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                 child: ListView(
                   shrinkWrap: true,
                   children: <Widget>[
-                    HomeFirst(coinData, amount: amountApp),
+                    HomeFirst(coinData, amount: amountApp, userData: userInfo),
                     Container(
                       width: MediaQuery.devicePixelRatioOf(context),
                       color: Colors.white,
@@ -246,21 +247,33 @@ class DashboardScreenState extends State<DashboardScreen> {
                         children: [
                           Container(
                             width: MediaQuery.of(context).size.width - 30,
-                            height: 540,
-                            margin: const EdgeInsets.symmetric(horizontal: 10),
-                            child: ListView.builder(
-                                itemCount: items.length,
-                                itemBuilder: (context, index) {
-                                  final item = items[index];
-                                  return WalletCard(
-                                      item: item,
-                                      index: index,
-                                      coinData: coinData);
-                                }),
+                            margin: const EdgeInsets.only(top: 10, bottom: 30),
+                            child: items.length < 1
+                                ? const Center(
+                                    child: Text(
+                                      "No Crypto Wallet Found",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: items.length,
+                                    itemBuilder: (context, index) {
+                                      final item = items[index];
+                                      return WalletCard(
+                                        item: item,
+                                        index: index,
+                                        coinData: coinData,
+                                      );
+                                    },
+                                  ),
                           ),
                         ],
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),

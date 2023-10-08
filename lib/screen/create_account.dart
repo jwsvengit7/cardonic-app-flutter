@@ -35,10 +35,9 @@ class CreateAccountScreenState extends State<CreateAccountScreen> {
       final Map<String, dynamic> responseData = json.decode(response.body);
       final dynamic successMessage = responseData['data'];
       print(successMessage);
-      if (successMessage == "") {
-        alert("Otp Have been sent to your inbox'", "Success");
-      }
-      alert(successMessage, "Success");
+      (successMessage == "Registered successful")
+          ? alert("Otp Have been sent to your inbox'", "Success")
+          : alert(successMessage, "Warning");
     } catch (e) {
       print(e);
       alert("Error occurred", "Warning");

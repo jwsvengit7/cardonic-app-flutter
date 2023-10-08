@@ -1,7 +1,8 @@
-import 'package:cardmonix/screen/Login_Signup.dart';
+import 'package:cardmonix/screen/User/dashboard.dart';
 import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'dart:convert';
 
 class Otp extends StatefulWidget {
@@ -10,10 +11,10 @@ class Otp extends StatefulWidget {
   const Otp({super.key, required this.email});
 
   @override
-  _OtpState createState() => _OtpState();
+  OtpState createState() => OtpState();
 }
 
-class _OtpState extends State<Otp> {
+class OtpState extends State<Otp> {
   final TextEditingController _otpController1 = TextEditingController();
   final TextEditingController _otpController2 = TextEditingController();
   final TextEditingController _otpController3 = TextEditingController();
@@ -128,66 +129,46 @@ class _OtpState extends State<Otp> {
         _otpController3.text +
         _otpController4.text;
 
-    print("Entered OTP: $otp");
     try {
       final response =
           await APIService().verifyOtp(email: widget.email, otp: otp);
       final Map<String, dynamic> responseData = json.decode(response.body);
       final dynamic successMessage = responseData['data'];
       print(successMessage);
-      if (response.statusCode == 200) {
-        _showSuccessDialog(context, successMessage);
-      } else if (response.statusCode == 201) {
-        _showMessageWarning(context, successMessage);
+      print(response.statusCode);
+      if (response.statusCode == 202) {
+        alert(successMessage, "Success");
+      } else {
+        alert(successMessage, "Warning");
+        //okparaifeanyi21@gmail.com
       }
     } catch (e) {
       print(e);
-      _showMessageWarning(context, "Error occurred");
+      alert("Error occurred", "Warning");
     }
   }
 
-  void _showSuccessDialog(BuildContext context, var successMessage) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(successMessage),
-          content: const Text('Account Have been Confirm'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginSignupScreen()),
-                );
-              },
-              child: const Text('Next'),
-            ),
-          ],
-        );
-      },
+  void success() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => DashboardScreen(),
+      ),
     );
   }
 
-  void _showMessageWarning(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('OTP Error'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
+  void _stay() {}
+
+  void alert(String message, String type) {
+    AwesomeDialog(
+        context: context,
+        dialogType: type == "Warning" ? DialogType.warning : DialogType.success,
+        animType: AnimType.topSlide,
+        showCloseIcon: true,
+        title: type,
+        desc: message,
+        btnOkOnPress: () {
+          type == "Success" ? success() : _stay();
+        }).show();
   }
 
   void _resendOtp() {
