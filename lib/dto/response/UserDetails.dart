@@ -59,14 +59,14 @@ class UserData {
   final Balance? balance;
 
   UserData({
-     this.id,
-     this.email,
-     this.user_name,
-     this.phone,
-     this.dob,
-     this.profile,
-     this.role,
-     this.balance,
+    this.id,
+    this.email,
+    this.user_name,
+    this.phone,
+    this.dob,
+    this.profile,
+    this.role,
+    this.balance,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {

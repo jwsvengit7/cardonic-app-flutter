@@ -1,12 +1,16 @@
 import 'package:cardmonix/dto/response/CoinsResponse.dart';
+import 'package:cardmonix/dto/response/UserDetails.dart';
 import 'package:cardmonix/screen/User/coins/CoinDetails.dart';
+import 'package:cardmonix/screen/User/withdraw/withdraw.dart';
 import 'package:flutter/material.dart';
 
 class HomeFirst extends StatefulWidget {
   final List<Coin> coinData;
+  final UserData? userData;
   final double amount;
 
-  HomeFirst(this.coinData, {super.key, required this.amount});
+  HomeFirst(this.coinData,
+      {super.key, required this.amount, required this.userData});
 
   @override
   HomeFirstState createState() => HomeFirstState();
@@ -31,7 +35,6 @@ class HomeFirstState extends State<HomeFirst> {
             Positioned(
               bottom: 30,
               left: 10,
-              top: 50,
               right: 10,
               child: Container(
                 width: 390,
@@ -47,44 +50,71 @@ class HomeFirstState extends State<HomeFirst> {
                     ),
                   ],
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    spaceHeight,
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
                         '\$${widget.amount}',
                         style: const TextStyle(
-                          color: Color.fromARGB(184, 255, 255, 255),
-                          fontSize: 25,
+                          color: Colors.white,
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    spaceHeight,
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Monthly Status:',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Withdraw(
+                                userData: widget.userData,
+                                amount: widget.amount,
+                              ),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.lightBlue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                         ),
+                        child: Container(
+                            width: 110,
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            alignment: Alignment.center,
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Icon(
+                                  Icons.balance,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                                Text(
+                                  "Withdraw",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            )),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Active',
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Status: Active',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 24,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

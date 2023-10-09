@@ -29,7 +29,8 @@ class HistoryItem {
 }
 
 class History extends StatefulWidget {
-  const History({super.key});
+  final int? userId;
+  History({required this.userId});
 
   @override
   HistoryState createState() => HistoryState();
@@ -42,7 +43,7 @@ class HistoryState extends State<History> {
   Future<void> fetchDeposit() async {
     try {
       final savedToken = await APIService().getStoredToken();
-      final response = await APIService().getAlldeposit(savedToken);
+      final response = await APIService().getdeposit(savedToken, widget.userId);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);

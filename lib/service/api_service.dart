@@ -165,10 +165,10 @@ class APIService {
 
 // DEPOSIT SERVICE
 
-  Future<http.Response> get_deposit(var saveToken) {
+  Future<http.Response> getdeposit(var saveToken, var userId) {
     return http.get(
         Uri.parse(
-            "${Constants.getBackendUrl()}/api/v1/deposit/get-deposit-byUser"),
+            "${Constants.getBackendUrl()}/api/v1/deposit/get-deposit-byUser/${userId}"),
         headers: {
           'Authorization': 'Bearer $saveToken',
         });

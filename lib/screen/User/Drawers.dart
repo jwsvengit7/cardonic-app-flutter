@@ -90,7 +90,8 @@ class Drawers extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const History()),
+                MaterialPageRoute(
+                    builder: (context) => History(userId: userData.id)),
               );
             },
           ),
