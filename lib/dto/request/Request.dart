@@ -8,18 +8,11 @@ class Request {
 
   static Map<String, String> createRequest(
       String username, String email, String password) {
-    return {
-      "username": username, 
-      "email": email,
-      "password": password
-     };
+    return {"username": username, "email": email, "password": password};
   }
 
   static Map<String, String> loginRequest(String email, String password) {
-    return {
-      "email": email, 
-      "password": password
-      };
+    return {"email": email, "password": password};
   }
 
   static Map<String, String> createBankAccount(
@@ -41,17 +34,10 @@ class Request {
   }
 
   static Map<String, String> verifyOtp(var email, var otp) {
-    return {
-      "email": email,
-      "otp": otp
-     };
+    return {"email": email, "otp": otp};
   }
 
   static Map<String, dynamic> createGiftcard(var name, var amount) {
-    return {
-      "name": name, 
-      "amount": amount
-      };
+    return {"name": name, "amount": amount};
   }
 }
-

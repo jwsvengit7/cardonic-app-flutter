@@ -112,8 +112,7 @@ class Drawers extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const LoginSignupScreen()),
+                MaterialPageRoute(builder: (context) => LoginSignupScreen()),
               );
             },
           ),

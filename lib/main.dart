@@ -1,3 +1,5 @@
+import 'package:cardmonix/helpers/state_manager.dart';
+import 'package:cardmonix/screen/User/giftcards/giftcardRate.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/login_signup.dart';
 import 'package:cardmonix/screen/create_account.dart';
@@ -10,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 int? screen;
 Future<void> main() async {
   await dotenv.load();
+  Get.put(AuthController());
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences pref = await SharedPreferences.getInstance();
   screen = pref.getInt("intscreen");
@@ -29,12 +32,13 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
           visualDensity: VisualDensity.adaptivePlatformDensity),
-      initialRoute: screen == 0 || screen == null ? "/" : "/dashboard",
+      initialRoute: screen == 0 || screen == null ? "/" : "/rate",
       routes: {
-        '/': (context) => OnBoardingPage(),
+        '/': (context) => const OnBoardingPage(),
         '/login': (context) => const LoginSignupScreen(),
         '/signup': (context) => const CreateAccountScreen(),
         '/dashboard': (context) => const DashboardScreen(),
+        '/rate': (context) => RateCard(),
       },
     );
   }

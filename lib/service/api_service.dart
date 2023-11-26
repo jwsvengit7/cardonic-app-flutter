@@ -9,7 +9,7 @@ class APIService {
       {var email, var password, var username}) async {
     try {
       final response = await http.post(
-        Uri.parse("${Constants.getBackendUrl()}/api/v1/auth/register"),
+        Uri.parse("${Constants.getBackendUrl()}/api/v1/Signup.php"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(Request.createRequest(username, email, password)),
       );
@@ -28,7 +28,7 @@ class APIService {
   Future<http.Response> verifyOtp({var email, var otp}) async {
     try {
       final response = await http.post(
-        Uri.parse("${Constants.getBackendUrl()}/api/v1/auth/otp_verify"),
+        Uri.parse("${Constants.getBackendUrl()}/api/v1/Otp.php"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(Request.verifyOtp(email, otp)),
       );
@@ -44,18 +44,16 @@ class APIService {
   }
 
   Future<http.Response> login({var email, var password}) async {
+    print(email);
+    print(password);
     try {
       final response = await http.post(
-        Uri.parse("${Constants.getBackendUrl()}/api/v1/auth/login"),
+        Uri.parse("${Constants.getBackendUrl()}/api/v1/Login.php"),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(Request.loginRequest(email, password)),
+        body: jsonEncode({"email": email, "password": password}),
       );
 
-      if (response.statusCode == 200) {
-        return response;
-      } else {
-        return http.Response(response.body, response.statusCode);
-      }
+      return response;
     } catch (e) {
       print('Error: $e');
       return http.Response('Error: $e', 500);

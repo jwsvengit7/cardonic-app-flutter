@@ -1,44 +1,80 @@
+import 'package:cardmonix/dto/response/User.dart';
+import 'package:cardmonix/helpers/state_manager.dart';
 import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/create_account.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'dart:convert';
 import 'package:cardmonix/screen/User/dashboard.dart';
+import 'package:http/http.dart' as http;
 
 class LoginSignupScreen extends StatefulWidget {
   const LoginSignupScreen({super.key});
 
   @override
-  _LoginSignupScreenState createState() => _LoginSignupScreenState();
+  LoginSignupScreenState createState() => LoginSignupScreenState();
 }
 
-class _LoginSignupScreenState extends State<LoginSignupScreen> {
+class LoginSignupScreenState extends State<LoginSignupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final SizedBox spaceHeight = const SizedBox(height: 20);
+  final AuthController _authController = Get.find<AuthController>();
+  bool isFetching = false;
+
+  Future<void> getCors() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            "https://cardmonixadmin.pro/cardmonix/api/v1/GetUserDetails.php"),
+        headers: {'Content-Type': 'application/json'},
+      );
+      print(response);
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void _handleLogin() async {
     try {
+      setState(() {
+        isFetching = true;
+      });
       final response = await APIService().login(
           email: _emailController.text, password: _passwordController.text);
+      print(response);
+      print(response.statusCode);
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        final token = responseData['data']['responseAccess']['jwt-token'];
+        final User user = User.fromJson(responseData);
+        String? token = user.token;
+        setState(() {
+          isFetching = false;
+        });
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
+        _authController.setUser(user);
         print(token);
+        print("token");
         alert('Login succesful', "Success");
       } else {
+        setState(() {
+          isFetching = false;
+        });
         print(response.statusCode);
         final responseData = json.decode(response.body);
-        final message = responseData['data']['data'];
-        alert(responseData['message'] ?? message.toString(), "Warning");
+        final message = responseData['message'];
+        alert(message ?? message, "Warning");
       }
     } catch (e) {
       print(e);
+      setState(() {
+        isFetching = false;
+      });
       alert("Error occured", "Warning");
     }
   }
@@ -49,6 +85,12 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
         builder: (context) => DashboardScreen(),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCors();
   }
 
   void _stay() {
@@ -162,17 +204,25 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
 
   Widget _buildElevatedButton() {
     return ElevatedButton(
-      onPressed: _handleLogin,
-      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-      child: const SizedBox(
+      onPressed: isFetching ? null : _handleLogin,
+      style: ElevatedButton.styleFrom(
+          backgroundColor: isFetching ? Colors.grey : Colors.red),
+      child: SizedBox(
         width: 280,
         height: 50,
-        child: Center(
-          child: Text(
-            'Login',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-        ),
+        child: isFetching
+            ? const Center(
+                child: LoadingSpinner(),
+              )
+            : Center(
+                child: Text(
+                  'Login',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
       ),
     );
   }
@@ -214,6 +264,17 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
           ),
         ]),
       ),
+    );
+  }
+}
+
+class LoadingSpinner extends StatelessWidget {
+  const LoadingSpinner({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 }
