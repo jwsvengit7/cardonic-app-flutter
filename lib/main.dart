@@ -32,13 +32,13 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
           visualDensity: VisualDensity.adaptivePlatformDensity),
-      initialRoute: screen == 0 || screen == null ? "/" : "/rate",
+      initialRoute: screen == 0 || screen == null ? "/" : "/login",
       routes: {
         '/': (context) => const OnBoardingPage(),
         '/login': (context) => const LoginSignupScreen(),
         '/signup': (context) => const CreateAccountScreen(),
         '/dashboard': (context) => const DashboardScreen(),
-        '/rate': (context) => RateCard(),
+        '/rate': (context) => const RateCard(),
       },
     );
   }

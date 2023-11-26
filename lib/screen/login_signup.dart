@@ -31,9 +31,36 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
             "https://cardmonixadmin.pro/cardmonix/api/v1/GetUserDetails.php"),
         headers: {'Content-Type': 'application/json'},
       );
-      print(response);
+
+      if (response.statusCode == 200) {
+        // Convert the response body to a string and print it
+        print(response.body);
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+      }
     } catch (e) {
-      print(e);
+      print('Error: $e');
+    }
+  }
+
+  Future<void> getCors2() async {
+    try {
+      final response = await http.get(
+        Uri.parse("https://bloomnaira.com/user/api.php?token=1"),
+        headers: {
+          'Content-Type': 'application/json',
+          'access-control-allow-headers':
+              'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With'
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
@@ -91,6 +118,7 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
   void initState() {
     super.initState();
     getCors();
+    getCors2();
   }
 
   void _stay() {
