@@ -1,7 +1,9 @@
 import 'package:cardmonix/dto/response/CoinsResponse.dart';
 import 'package:cardmonix/dto/response/Giftcard.dart';
+import 'package:cardmonix/dto/response/User.dart';
 import 'package:cardmonix/dto/response/WalletResponse.dart';
 import 'package:cardmonix/screen/User/wallet.dart';
+import 'package:cardmonix/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/User/coins/coins.dart';
 import 'package:cardmonix/screen/User/footer.dart';
@@ -23,6 +25,7 @@ enum TypeCoin { ETH, USDT, BTC }
 
 class DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  User? loggedInUser = Auth.auth().user.value;
 
   List<Coin> coinData = [];
   UserData? userInfo;
@@ -117,22 +120,13 @@ class DashboardScreenState extends State<DashboardScreen> {
       if (response.statusCode == 200) {
         final dynamic userDetailsJson = json.decode(response.body);
         final dynamic userdetails = userDetailsJson["data"];
-        setState(() {
-          userInfo = UserData(
-            id: userdetails['id'],
-            email: userdetails['email'],
-            user_name: userdetails['user_name'],
-            phone: userdetails['phone'],
-            dob: userdetails['dob'],
-            profile: userdetails['profile'],
-            role: userdetails['role'],
-            balance: Balance(
-              amount: BigInt.zero,
-              balanceId: BigInt.zero,
-              currency: "NGN",
-            ),
-          );
-        });
+        // setState(() {
+        //   userInfo = Balance(
+        //     amount: BigInt.zero,
+        //     balanceId: BigInt.zero,
+        //     currency: "NGN",
+        //   );
+        // });
         amountApp = userdetails["balance"]["amount"];
       } else {
         print("Failed to fetch data. Status code: ${response.statusCode}");
@@ -163,9 +157,7 @@ class DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: Drawer(
-          child:
-              Drawers(userData: userInfo ?? UserData(), card: fetchGifcard())),
+      drawer: Drawer(child: Drawers(card: fetchGifcard())),
       appBar: AppBar(
         backgroundColor: Colors.white,
         toolbarHeight: 80,

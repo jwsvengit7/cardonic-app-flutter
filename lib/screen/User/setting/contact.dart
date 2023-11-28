@@ -1,19 +1,18 @@
 import 'dart:convert';
 
 import 'package:cardmonix/dto/response/AccountInfoResponse.dart';
-import 'package:cardmonix/dto/response/UserDetails.dart';
+import 'package:cardmonix/dto/response/User.dart';
 import 'package:cardmonix/service/api_service.dart';
+import 'package:cardmonix/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class Contact extends StatefulWidget {
-  final UserData userDetails;
-  const Contact({super.key, required this.userDetails});
-
   @override
   _ContactState createState() => _ContactState();
 }
 
 class _ContactState extends State<Contact> {
+  User? loggedInUser = Auth.auth().user.value;
   String accountName = '';
   String accountNumber = '';
   String bankName = '';
@@ -27,9 +26,9 @@ class _ContactState extends State<Contact> {
     try {
       var token = await APIService().getStoredToken();
       final response =
-          await APIService().get_account(token, widget.userDetails.id);
+          await APIService().get_account(token, loggedInUser!.userid);
 
-      print(widget.userDetails.id);
+      print(loggedInUser!.userid);
       print(token);
 
       if (response.statusCode == 200) {
@@ -60,15 +59,15 @@ class _ContactState extends State<Contact> {
         children: [
           buildContactInfoCard(
             "Name",
-            widget.userDetails.user_name ?? "N/A",
+            loggedInUser!.username,
           ),
           buildContactInfoCard(
             "Email",
-            widget.userDetails.email ?? "N/A",
+            loggedInUser!.email,
           ),
           buildContactInfoCard(
             "Phone",
-            widget.userDetails.phone ?? "N/A",
+            loggedInUser!.phone.toString(),
           ),
           buildAccountDetailsCard(
             "Account Details",

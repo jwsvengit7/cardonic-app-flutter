@@ -1,4 +1,3 @@
-import 'package:cardmonix/dto/response/UserDetails.dart';
 import 'package:cardmonix/screen/User/setting/account.dart';
 import 'package:cardmonix/screen/User/setting/contact.dart';
 import 'package:cardmonix/screen/User/setting/graph.dart';
@@ -6,14 +5,12 @@ import 'package:cardmonix/screen/User/setting/security.dart';
 import 'package:cardmonix/screen/User/setting/wallet.dart';
 import 'package:cardmonix/screen/User/setting/card.dart';
 import 'package:cardmonix/screen/User/setting/password.dart';
+
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class Setting extends StatelessWidget {
   Color color = const Color.fromARGB(255, 237, 70, 41);
-  UserData userData;
-
-  Setting({super.key, required this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -137,8 +134,7 @@ class Setting extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => Contact(userDetails: userData)),
+                MaterialPageRoute(builder: (context) => Contact()),
               );
             },
             child: Row(

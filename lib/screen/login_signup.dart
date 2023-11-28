@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'dart:convert';
 import 'package:cardmonix/screen/User/dashboard.dart';
-import 'package:http/http.dart' as http;
 
 class LoginSignupScreen extends StatefulWidget {
   const LoginSignupScreen({super.key});
@@ -21,48 +20,8 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final SizedBox spaceHeight = const SizedBox(height: 20);
-  final AuthController _authController = Get.find<AuthController>();
+  final AuthController _authController = Get.put(AuthController());
   bool isFetching = false;
-
-  Future<void> getCors() async {
-    try {
-      final response = await http.get(
-        Uri.parse(
-            "https://cardmonixadmin.pro/cardmonix/api/v1/GetUserDetails.php"),
-        headers: {'Content-Type': 'application/json'},
-      );
-
-      if (response.statusCode == 200) {
-        // Convert the response body to a string and print it
-        print(response.body);
-      } else {
-        print('Request failed with status: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
-
-  Future<void> getCors2() async {
-    try {
-      final response = await http.get(
-        Uri.parse("https://bloomnaira.com/user/api.php?token=1"),
-        headers: {
-          'Content-Type': 'application/json',
-          'access-control-allow-headers':
-              'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With'
-        },
-      );
-
-      if (response.statusCode == 200) {
-        print(response.body);
-      } else {
-        print('Request failed with status: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
 
   void _handleLogin() async {
     try {
@@ -71,12 +30,11 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
       });
       final response = await APIService().login(
           email: _emailController.text, password: _passwordController.text);
-      print(response);
-      print(response.statusCode);
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         final User user = User.fromJson(responseData);
+
         String? token = user.token;
         setState(() {
           isFetching = false;
@@ -84,21 +42,20 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
+
         _authController.setUser(user);
-        print(token);
-        print("token");
+
         alert('Login succesful', "Success");
       } else {
         setState(() {
           isFetching = false;
         });
-        print(response.statusCode);
+
         final responseData = json.decode(response.body);
         final message = responseData['message'];
         alert(message ?? message, "Warning");
       }
     } catch (e) {
-      print(e);
       setState(() {
         isFetching = false;
       });
@@ -117,8 +74,6 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
   @override
   void initState() {
     super.initState();
-    getCors();
-    getCors2();
   }
 
   void _stay() {
@@ -242,7 +197,7 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
             ? const Center(
                 child: LoadingSpinner(),
               )
-            : Center(
+            : const Center(
                 child: Text(
                   'Login',
                   style: TextStyle(

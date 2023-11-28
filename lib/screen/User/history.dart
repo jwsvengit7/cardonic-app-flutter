@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:cardmonix/dto/response/User.dart';
 import 'package:cardmonix/screen/User/dashboard.dart';
 import 'package:cardmonix/screen/User/view/viewHistory.dart';
 import 'package:cardmonix/service/api_service.dart';
+import 'package:cardmonix/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 enum TransactionType { Deposit, Pending }
@@ -29,9 +31,6 @@ class HistoryItem {
 }
 
 class History extends StatefulWidget {
-  final int? userId;
-  History({required this.userId});
-
   @override
   HistoryState createState() => HistoryState();
 }
@@ -39,11 +38,12 @@ class History extends StatefulWidget {
 class HistoryState extends State<History> {
   List<HistoryItem> items = [];
 
-  // Fetch deposit history data from the API
+  User? loggedInUser = Auth.auth().user.value;
   Future<void> fetchDeposit() async {
     try {
       final savedToken = await APIService().getStoredToken();
-      final response = await APIService().getdeposit(savedToken, widget.userId);
+      final response =
+          await APIService().getdeposit(savedToken, loggedInUser!.userid);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);

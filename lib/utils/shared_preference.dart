@@ -9,6 +9,7 @@ class UserPreferences {
     await prefs.setString('username', user.username);
     await prefs.setString('email', user.email);
     await prefs.setString('role', user.role);
+    await prefs.setInt('phone', user.phone ?? 0);
     await prefs.setString('token', user.token);
   }
 
@@ -18,11 +19,13 @@ class UserPreferences {
     int? userid = prefs.getInt("userid");
     String? username = prefs.getString("username");
     String? email = prefs.getString("email");
+    int? phone = prefs.getInt("phone");
     String? role = prefs.getString("role");
     String? token = prefs.getString("token");
 
     return User(
       userid: userid,
+      phone: phone,
       username: username!,
       email: email!,
       role: role!,

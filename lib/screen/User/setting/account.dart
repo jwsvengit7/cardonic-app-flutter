@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:cardmonix/components/modar/Alert.dart';
-import 'package:cardmonix/dto/response/Bank.dart';
+import 'package:cardmonix/Components/modar/Alert.dart';
+import 'package:cardmonix/DTO/Response/Bank.dart';
 import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

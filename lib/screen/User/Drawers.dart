@@ -1,18 +1,20 @@
 import 'package:cardmonix/dto/response/Giftcard.dart';
-import 'package:cardmonix/dto/response/UserDetails.dart';
+import 'package:cardmonix/dto/response/User.dart';
 import 'package:cardmonix/screen/User/giftcards/giftcards.dart';
 import 'package:cardmonix/screen/User/history.dart';
 import 'package:cardmonix/screen/login_signup.dart';
+import 'package:cardmonix/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/User/giftcards/giftcardsItem.dart';
 import 'package:cardmonix/screen/User/settings.dart';
 
+// ignore: must_be_immutable
 class Drawers extends StatelessWidget {
-  final UserData userData;
   final Future<List<Giftcard>> card;
 
-  const Drawers({super.key, required this.userData, required this.card});
+  User? loggedInUser = Auth.auth().user.value;
 
+  Drawers({super.key, required this.card});
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -37,14 +39,14 @@ class Drawers extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  userData.user_name ?? "No User Name",
+                  loggedInUser!.username,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                   ),
                 ),
                 Text(
-                  userData.email ?? "No Email",
+                  loggedInUser!.email,
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
@@ -64,8 +66,7 @@ class Drawers extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => Giftcards(userData: userData)),
+                MaterialPageRoute(builder: (context) => Giftcards()),
               );
             },
           ),
@@ -90,8 +91,7 @@ class Drawers extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => History(userId: userData.id)),
+                MaterialPageRoute(builder: (context) => History()),
               );
             },
           ),
@@ -101,8 +101,7 @@ class Drawers extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => Setting(userData: userData)),
+                MaterialPageRoute(builder: (context) => Setting()),
               );
             },
           ),
@@ -112,7 +111,8 @@ class Drawers extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginSignupScreen()),
+                MaterialPageRoute(
+                    builder: (context) => const LoginSignupScreen()),
               );
             },
           ),

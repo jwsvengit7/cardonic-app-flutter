@@ -5,9 +5,6 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 
 class Giftcards extends StatefulWidget {
-  final UserData userData;
-  Giftcards({super.key, required this.userData});
-
   _UploadImageScreenState createState() => _UploadImageScreenState();
 }
 

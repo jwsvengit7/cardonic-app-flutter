@@ -1,4 +1,5 @@
 import 'package:cardmonix/helpers/state_manager.dart';
+import 'package:cardmonix/onboarding_screen_example/onboarding_page.dart';
 import 'package:cardmonix/screen/User/giftcards/giftcardRate.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/login_signup.dart';
@@ -6,7 +7,6 @@ import 'package:cardmonix/screen/create_account.dart';
 import 'package:cardmonix/screen/User/dashboard.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'package:cardmonix/onboarding_screen_example/onboarding_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 int? screen;
