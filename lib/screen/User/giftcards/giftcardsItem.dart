@@ -1,10 +1,11 @@
 import 'package:cardmonix/dto/response/Giftcard.dart';
+import 'package:cardmonix/dto/response/WalletResponse.dart';
+import 'package:cardmonix/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class Item extends StatelessWidget {
-  final Future<List<Giftcard>> card;
-
-  Item({Key? key, required this.card}) : super(key: key);
+  WalletResponse? balance = Auth.auth().balance.value;
+  List<Giftcard>? giftcards = Auth.auth().giftcards.value;
 
   @override
   Widget build(BuildContext context) {
@@ -35,59 +36,48 @@ class Item extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          FutureBuilder<List<Giftcard>>(
-            future: card,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                // While waiting for the data to load, you can display a loading indicator.
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                // Handle error state here.
-                return Text("Error: ${snapshot.error}");
-              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                // Display the list of Giftcards.
-                return Wrap(
-                  spacing: 15,
-                  runSpacing: 10,
-                  alignment: WrapAlignment.spaceAround,
-                  children: snapshot.data!.map((item) {
-                    return SizedBox(
-                      width: 180,
-                      height: 200,
-                      child: Card(
-                        color: Colors.white,
-                        elevation: 3,
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Image.network(
-                                item.image,
-                                height: 100,
-                                width: 100,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                item.type,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Text("Price: \$${item.price.toStringAsFixed(2)}"),
-                          ],
+          if (giftcards != null && giftcards!.isNotEmpty)
+            Wrap(
+              spacing: 15,
+              runSpacing: 10,
+              alignment: WrapAlignment.spaceAround,
+              children: giftcards!.map((item) {
+                return SizedBox(
+                  width: 180,
+                  height: 200,
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 3,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Image.network(
+                            "item.image",
+                            height: 100,
+                            width: 100,
+                          ),
                         ),
-                      ),
-                    );
-                  }).toList(),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            item.type,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Text(
+                            "Price: \$${balance!.balance_amount.toStringAsFixed(2)}"),
+                      ],
+                    ),
+                  ),
                 );
-              } else {
-                // Handle the case where there is no data.
-                return Text("No data available.");
-              }
-            },
-          ),
+              }).toList(),
+            ),
+          if (giftcards == null || giftcards!.isEmpty)
+            Center(
+              child: Text("No data available."),
+            ),
         ],
       ),
     );

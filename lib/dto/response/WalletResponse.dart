@@ -1,22 +1,17 @@
 class WalletResponse {
-  final int walletId;
-  final double walletAmount;
-  final double walletInUsd;
-  final String coin;
+  final double crypto_balance;
+  final double card_balance;
+  final double balance_amount;
 
-  WalletResponse({
-    required this.walletId,
-    required this.walletAmount,
-    required this.walletInUsd,
-    required this.coin,
-  });
+  WalletResponse(
+      {required this.crypto_balance,
+      required this.card_balance,
+      required this.balance_amount});
 
   factory WalletResponse.fromJson(Map<String, dynamic> json) {
     return WalletResponse(
-      walletId: json['walletId'] as int,
-      walletAmount: json['wallet_amount'] as double,
-      walletInUsd: json['walletInUsd'] as double,
-      coin: json['coin'] as String,
-    );
+        card_balance: json['card_balance'] as double,
+        crypto_balance: json['crypto_balance'] as double,
+        balance_amount: json['balance_amount'] as double);
   }
 }

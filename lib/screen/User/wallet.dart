@@ -100,7 +100,7 @@ class WalletCardState extends State<WalletCard> {
                   ),
                 ),
                 Text(
-                  '${widget.item.walletAmount}',
+                  '${widget.item.card_balance}',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -121,7 +121,7 @@ class WalletCardState extends State<WalletCard> {
                   ),
                 ),
                 Text(
-                  '${widget.item.walletInUsd}',
+                  '${widget.item.crypto_balance}',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

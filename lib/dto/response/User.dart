@@ -4,11 +4,13 @@ class User {
   final String role;
   final String email;
   final String token;
+  final String image;
   final int? phone;
   User(
       {required this.userid,
       required this.role,
       required this.username,
+      required this.image,
       required this.phone,
       required this.email,
       required this.token});
@@ -18,6 +20,7 @@ class User {
       userid: json['userid'],
       role: json['role'],
       username: json['username'],
+      image: json['image'],
       phone: json['phone'],
       email: json['email'],
       token: json['token'],

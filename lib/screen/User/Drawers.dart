@@ -10,11 +10,9 @@ import 'package:cardmonix/screen/User/settings.dart';
 
 // ignore: must_be_immutable
 class Drawers extends StatelessWidget {
-  final Future<List<Giftcard>> card;
-
   User? loggedInUser = Auth.auth().user.value;
 
-  Drawers({super.key, required this.card});
+  Drawers({super.key});
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -76,7 +74,7 @@ class Drawers extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Item(card: card)),
+                MaterialPageRoute(builder: (context) => Item()),
               );
             },
           ),

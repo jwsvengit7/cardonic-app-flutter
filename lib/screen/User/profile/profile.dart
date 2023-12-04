@@ -1,13 +1,14 @@
+import 'package:cardmonix/dto/response/User.dart';
 import 'package:cardmonix/dto/response/UserDetails.dart';
+import 'package:cardmonix/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
-  final UserData userData;
-  Profile({required this.userData});
   ProfileState createState() => ProfileState();
 }
 
 class ProfileState extends State<Profile> {
+  User? loggedInUser = Auth.auth().user.value;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +44,7 @@ class ProfileState extends State<Profile> {
                     children: <Widget>[
                       ClipOval(
                         child: Image.network(
-                          widget.userData.profile!,
+                          loggedInUser!.image,
                           height: 100,
                           width: 100,
                           fit: BoxFit.cover,
@@ -53,7 +54,7 @@ class ProfileState extends State<Profile> {
                         height: 20,
                       ),
                       Text(
-                        widget.userData.user_name!,
+                        loggedInUser!.username,
                         style: const TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
@@ -62,7 +63,7 @@ class ProfileState extends State<Profile> {
                       ),
                       SizedBox(height: 10.0),
                       Text(
-                        widget.userData.email!,
+                        loggedInUser!.email,
                         style: const TextStyle(
                           fontSize: 16.0,
                           color: Colors.black,

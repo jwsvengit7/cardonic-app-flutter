@@ -1,5 +1,9 @@
 import 'dart:convert';
 import 'package:cardmonix/dto/request/Request.dart';
+import 'package:cardmonix/dto/response/CoinsResponse.dart';
+import 'package:cardmonix/dto/response/Giftcard.dart';
+import 'package:cardmonix/dto/response/UserDetails.dart';
+import 'package:cardmonix/dto/response/WalletResponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cardmonix/helpers/constants.dart';
 import 'package:http/http.dart' as http;
@@ -60,11 +64,17 @@ class APIService {
     }
   }
 
-  Future<http.Response> fetchCoins(int pageNo, int pageSize) {
-    return http.get(
-      Uri.parse(
-          "${Constants.getBackendUrl()}/api/v1/user/veiw-coin?pageNo=$pageNo&pageSize=$pageSize"),
-    );
+  Future<List<Coin>> fetchData() async {
+    final response = await http.get(Uri.parse(
+        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,tether,xrp,bitcoin-cash'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+      List<Coin> coins = jsonData.map((data) => Coin.fromJson(data)).toList();
+      return coins;
+    } else {
+      throw Exception('Failed to load data');
+    }
   }
 
 // COIN
@@ -88,13 +98,24 @@ class APIService {
     );
   }
 
-  Future<http.Response> getAllGiftcard(var saveToken) {
-    return http.get(
-      Uri.parse("${Constants.getBackendUrl()}/api/v1/giftcards/all-giftcard"),
-      headers: {
-        'Authorization': 'Bearer $saveToken',
-      },
+  Future<List<Giftcard>> fetchGiftcards() async {
+    final response = await http.get(
+      Uri.parse("${Constants.getBackendUrl()}/api/v1/viewcards.php"),
     );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body)['data'];
+
+      List<Giftcard> giftcards = [];
+      jsonData.forEach((element) {
+        final giftcard = Giftcard.fromJson(element);
+        giftcards.add(giftcard);
+      });
+
+      return giftcards;
+    } else {
+      throw Exception('Failed to load giftcards');
+    }
   }
 
   Future<http.Response> createGiftcard(var saveToken, var name, var amount) {
@@ -107,12 +128,18 @@ class APIService {
         body: jsonEncode(Request.createGiftcard(name, amount)));
   }
 
-  Future<http.Response> getWallet(var saveToken) {
-    return http.get(
-        Uri.parse("${Constants.getBackendUrl()}/api/v1/user/wallets"),
-        headers: {
-          'Authorization': 'Bearer $saveToken',
-        });
+  Future<WalletResponse> getWallet(var userId) async {
+    final response = await http.get(
+      Uri.parse(
+          "${Constants.getBackendUrl()}/api/v1/user/GetUserDetails/$userId"),
+    );
+    if (response.statusCode == 200) {
+      final dynamic responseData = json.decode(response.body)['balance'];
+      final WalletResponse balance = WalletResponse.fromJson(responseData);
+      return balance;
+    } else {
+      throw Exception('Balance Failed');
+    }
   }
 
   // Account Details

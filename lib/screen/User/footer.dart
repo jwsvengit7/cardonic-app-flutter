@@ -3,9 +3,6 @@ import 'package:cardmonix/screen/User/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 class Footer extends StatefulWidget {
-  final UserData userData;
-  Footer({required this.userData});
-
   @override
   FooterState createState() => FooterState();
 }
@@ -18,9 +15,7 @@ class FooterState extends State<Footer> {
       _currentIndex = index;
       if (index == 2) {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Profile(userData: widget.userData)));
+            context, MaterialPageRoute(builder: (context) => Profile()));
       } else if (index == 0) {
         Navigator.pushNamed(context, '/dashboard');
       }

@@ -1,16 +1,16 @@
+import 'dart:ffi';
+
 import 'package:cardmonix/dto/response/CoinsResponse.dart';
-import 'package:cardmonix/dto/response/UserDetails.dart';
+import 'package:cardmonix/dto/response/WalletResponse.dart';
 import 'package:cardmonix/screen/User/coins/CoinDetails.dart';
 import 'package:cardmonix/screen/User/withdraw/withdraw.dart';
+import 'package:cardmonix/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class HomeFirst extends StatefulWidget {
-  final List<Coin> coinData;
-  final UserData? userData;
-  final double amount;
+  List<Coin>? coinList = Auth.auth().coinList.value;
 
-  HomeFirst(this.coinData,
-      {super.key, required this.amount, required this.userData});
+  WalletResponse? balance = Auth.auth().balance.value;
 
   @override
   HomeFirstState createState() => HomeFirstState();
@@ -56,7 +56,7 @@ class HomeFirstState extends State<HomeFirst> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '\$${widget.amount}',
+                        '\$${widget.balance?.balance_amount}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 28,
@@ -69,10 +69,7 @@ class HomeFirstState extends State<HomeFirst> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Withdraw(
-                                userData: widget.userData,
-                                amount: widget.amount,
-                              ),
+                              builder: (context) => Withdraw(),
                             ),
                           );
                         },
@@ -130,14 +127,14 @@ class HomeFirstState extends State<HomeFirst> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: widget.coinData.map((value) {
+              children: widget.coinList!.map((value) {
                 return GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => CoinDetailScreen(
                           coinName: value.name,
-                          coinPrice: value.current_price,
+                          coinPrice: value.currentPrice,
                           coinImage: value.image,
                         ),
                       ),
@@ -189,7 +186,7 @@ class HomeFirstState extends State<HomeFirst> {
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          "\$${value.current_price}",
+                          "\$${value.currentPrice}",
                           style: const TextStyle(
                             fontSize: 18,
                             color: Colors.green,
