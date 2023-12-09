@@ -1,13 +1,14 @@
 class Giftcard {
   final int id;
   final String name;
-  final double amount;
-  final double rate;
+  final String amount;
+  final String rate;
   final String category;
   final String type;
   final String subCategory;
   final String date;
   final String comment;
+  final String image;
 
   Giftcard({
     required this.id,
@@ -19,19 +20,21 @@ class Giftcard {
     required this.subCategory,
     required this.date,
     required this.comment,
+    required this.image,
   });
 
   factory Giftcard.fromJson(Map<String, dynamic> json) {
     return Giftcard(
       id: json['id'],
       name: json['name'],
-      amount: json['amount'].toDouble(),
-      rate: json['rate'].toDouble(),
+      amount: json['amount'],
+      rate: json['rate'],
       category: json['category'],
       type: json['type'],
       subCategory: json['sub_category'],
       date: json['date'],
       comment: json['comment'],
+      image: json['image'] ?? '', // Handle null image case
     );
   }
 }

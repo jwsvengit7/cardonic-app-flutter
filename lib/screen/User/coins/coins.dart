@@ -2,15 +2,15 @@ import 'dart:ffi';
 
 import 'package:cardmonix/dto/response/CoinsResponse.dart';
 import 'package:cardmonix/dto/response/WalletResponse.dart';
+import 'package:cardmonix/helpers/provider.dart';
 import 'package:cardmonix/screen/User/coins/CoinDetails.dart';
 import 'package:cardmonix/screen/User/withdraw/withdraw.dart';
 import 'package:cardmonix/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeFirst extends StatefulWidget {
-  List<Coin>? coinList = Auth.auth().coinList.value;
 
-  WalletResponse? balance = Auth.auth().balance.value;
 
   @override
   HomeFirstState createState() => HomeFirstState();
@@ -19,7 +19,8 @@ class HomeFirst extends StatefulWidget {
 class HomeFirstState extends State<HomeFirst> {
   SizedBox spaceHeight = const SizedBox(height: 20);
   @override
-  Widget build(BuildContext buildContext) {
+  Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,7 +57,7 @@ class HomeFirstState extends State<HomeFirst> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '\$${widget.balance?.balance_amount}',
+                        '\$${authProvider.balance?.balance_amount}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 28,
@@ -127,7 +128,7 @@ class HomeFirstState extends State<HomeFirst> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: widget.coinList!.map((value) {
+              children:authProvider.coin!.map((value) {
                 return GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(

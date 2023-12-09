@@ -1,20 +1,21 @@
-import 'package:cardmonix/dto/response/Giftcard.dart';
 import 'package:cardmonix/dto/response/User.dart';
-import 'package:cardmonix/screen/User/giftcards/giftcards.dart';
+import 'package:cardmonix/helpers/provider.dart';
+import 'package:cardmonix/screen/User/giftcards/giftcardRate.dart';
 import 'package:cardmonix/screen/User/history.dart';
 import 'package:cardmonix/screen/login_signup.dart';
 import 'package:cardmonix/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/User/giftcards/giftcardsItem.dart';
 import 'package:cardmonix/screen/User/settings.dart';
-
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 // ignore: must_be_immutable
 class Drawers extends StatelessWidget {
-  User? loggedInUser = Auth.auth().user.value;
 
-  Drawers({super.key});
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final User? user = authProvider.user;
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -36,20 +37,22 @@ class Drawers extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(
-                  loggedInUser!.username,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
-                ),
-                Text(
-                  loggedInUser!.email,
-                  style: const TextStyle(
+                if (user != null)
+                  Text(
+                    user.username ?? '',
+                    style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold),
-                ),
+                      fontSize: 18,
+                    ),
+                  ),
+                if (user != null)
+                  Text(
+                    user.email ?? '',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                  ),
               ],
             ),
           ),

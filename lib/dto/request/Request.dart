@@ -15,9 +15,10 @@ class Request {
     return {"email": email, "password": password};
   }
 
-  static Map<String, String> createBankAccount(
+  static Map<String, dynamic> createBankAccount(
       String accountNumber, String bankName, String accountName) {
     return {
+
       "accountNumber": accountNumber,
       "bankName": bankName,
       "accountName": accountName,

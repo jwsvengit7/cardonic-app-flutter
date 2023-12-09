@@ -1,3 +1,4 @@
+import 'package:cardmonix/components/input/input_field.dart';
 import 'package:cardmonix/screen/Verification/otp_verification.dart';
 import 'package:cardmonix/screen/login_signup.dart';
 import 'package:cardmonix/service/api_service.dart';
@@ -122,23 +123,23 @@ class CreateAccountScreenState extends State<CreateAccountScreen> {
                       fit: BoxFit.contain,
                     ),
                     spaceHieigt,
-                    buildInputField(
+                    InputField(
                       hintText: 'Username',
                       controller: _usernameController,
                     ),
                     spaceHieigt,
-                    buildInputField(
+                    InputField(
                       hintText: 'Email',
                       controller: _emailController,
                     ),
                     spaceHieigt,
-                    buildInputField(
+                    InputField(
                       hintText: 'Password',
                       controller: _passwordController,
                       obscureText: true,
                     ),
                     spaceHieigt,
-                    buildInputField(
+                    InputField(
                       hintText: 'Re-Password',
                       controller: _cpasswordController,
                       obscureText: true,
@@ -157,31 +158,7 @@ class CreateAccountScreenState extends State<CreateAccountScreen> {
     );
   }
 
-  Widget buildInputField({
-    required String hintText,
-    bool obscureText = false,
-    required TextEditingController controller,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: TextFormField(
-        obscureText: obscureText,
-        controller: controller,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter $hintText';
-          }
-          return null;
-        },
-      ),
-    );
-  }
+
 
   Widget buildElevatedButton(BuildContext context) {
     return ElevatedButton(

@@ -64,9 +64,10 @@ class APIService {
     }
   }
 
+
   Future<List<Coin>> fetchData() async {
     final response = await http.get(Uri.parse(
-        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,tether,xrp,bitcoin-cash'));
+        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,tether,xrp,bitcoin-cash,litecoin'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(response.body);
@@ -98,56 +99,74 @@ class APIService {
     );
   }
 
-  Future<List<Giftcard>> fetchGiftcards() async {
-    final response = await http.get(
-      Uri.parse("${Constants.getBackendUrl()}/api/v1/viewcards.php"),
-    );
+  Future<List<Giftcard>> fetchGiftcards(var userId) async {
+    try {
+      final response = await http.get(
+        Uri.parse("${Constants.getBackendUrl()}/api/v1/viewcards.php"),
+      );
 
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonData = json.decode(response.body)['data'];
+        final String responseBody = response.body;
+        print(responseBody);
+        if (responseBody.isNotEmpty) {
+          final List<dynamic> jsonData = json.decode(responseBody)['data'];
+          List<Giftcard> giftcards = jsonData.map((data) => Giftcard.fromJson(data)).toList();
+          return giftcards;
 
-      List<Giftcard> giftcards = [];
-      jsonData.forEach((element) {
-        final giftcard = Giftcard.fromJson(element);
-        giftcards.add(giftcard);
-      });
-
-      return giftcards;
-    } else {
-      throw Exception('Failed to load giftcards');
+      } else {
+        throw Exception('Failed to fetch gift cards: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching gift cards: $e');
+      throw Exception('Failed to load gift cards');
     }
   }
+
+
 
   Future<http.Response> createGiftcard(var saveToken, var name, var amount) {
     return http.post(
         Uri.parse(
-            "${Constants.getBackendUrl()}/api/v1/giftcards//create-giftcard"),
+            "${Constants.getBackendUrl()}/api/v1/giftcards/create-giftcard"),
         headers: {
           'Authorization': 'Bearer $saveToken',
         },
         body: jsonEncode(Request.createGiftcard(name, amount)));
   }
-
   Future<WalletResponse> getWallet(var userId) async {
-    final response = await http.get(
-      Uri.parse(
-          "${Constants.getBackendUrl()}/api/v1/user/GetUserDetails/$userId"),
-    );
-    if (response.statusCode == 200) {
-      final dynamic responseData = json.decode(response.body)['balance'];
-      final WalletResponse balance = WalletResponse.fromJson(responseData);
-      return balance;
-    } else {
-      throw Exception('Balance Failed');
+
+    try {
+      final response = await http.get(
+        Uri.parse("${Constants.getBackendUrl()}/api/v1/GetUserDetails.php/$userId"),
+      );
+      print(response);
+      if (response.statusCode == 200) {
+        final dynamic responseData = json.decode(response.body);
+        print(responseData);
+
+        // Ensure the 'balance' field is not a String, but a Map<String, dynamic>
+        if (responseData is Map<String, dynamic> && responseData.containsKey('balance')) {
+          final dynamic balanceData = responseData['balance'];
+          if (balanceData is Map<String, dynamic>) {
+            final WalletResponse balance = WalletResponse.fromJson(balanceData);
+            return balance;
+          }
+        }
+      }
+
+      throw Exception('Failed to load wallet details');
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to load wallet details');
     }
   }
+
 
   // Account Details
 
   Future<http.Response> get_account(var saveToken, var id) async {
     return http.get(
         Uri.parse(
-            "${Constants.getBackendUrl()}/api/v1/account/get-my-account/$id"),
+            "${Constants.getBackendUrl()}/api/v1/getaccount.php/$id"),
         headers: {
           'Authorization': 'Bearer $saveToken',
         });
@@ -165,22 +184,21 @@ class APIService {
   }
 
   Future<http.Response> saveAccount(
-    String saveToken,
+    int? userid,
     String accountNumber,
     String bankName,
     String accountName,
   ) async {
+    print(userid);
+    print(accountNumber);
+    print(bankName);
+    print(accountName);
     final Uri uri =
-        Uri.parse("${Constants.getBackendUrl()}/api/v1/account/saveAccount");
-
-    final headers = {
-      'Authorization': 'Bearer $saveToken',
-      'Content-Type': 'application/json', // Specify the content type
-    };
-
+        Uri.parse("${Constants.getBackendUrl()}/api/v1/AddBankAccount.php/$userid");
+    
     final response = await http.post(
       uri,
-      headers: headers,
+      headers: {'Content-Type': 'application/json'},
       body: jsonEncode(
           Request.createBankAccount(accountNumber, bankName, accountName)),
     );

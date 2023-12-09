@@ -2,13 +2,13 @@ import 'package:cardmonix/utils/colors.dart';
 import 'package:cardmonix/utils/height.dart';
 import 'package:flutter/material.dart';
 
-class RateCard extends StatefulWidget {
-  const RateCard({super.key});
+class Giftcards extends StatefulWidget {
+  const Giftcards({super.key});
   @override
   RateCardState createState() => RateCardState();
 }
 
-class RateCardState extends State<RateCard> {
+class RateCardState extends State<Giftcards> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController rate = TextEditingController();
   TextEditingController amount = TextEditingController();

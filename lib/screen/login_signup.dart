@@ -1,13 +1,18 @@
+import 'package:cardmonix/components/input/input_field.dart';
 import 'package:cardmonix/dto/response/User.dart';
+import 'package:cardmonix/helpers/provider.dart';
 import 'package:cardmonix/helpers/state_manager.dart';
 import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/create_account.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'dart:convert';
 import 'package:cardmonix/screen/User/dashboard.dart';
+
+import '../utils/validate.dart';
 
 class LoginSignupScreen extends StatefulWidget {
   const LoginSignupScreen({super.key});
@@ -20,14 +25,14 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final SizedBox spaceHeight = const SizedBox(height: 20);
-  final AuthController _authController = Get.put(AuthController());
-  bool isFetching = false;
+
 
   void _handleLogin() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    authProvider.setIsFetching(true);
     try {
-      setState(() {
-        isFetching = true;
-      });
+      authProvider.setIsFetching(true);
       final response = await APIService().login(
           email: _emailController.text, password: _passwordController.text);
 
@@ -36,29 +41,24 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
         final User user = User.fromJson(responseData);
 
         String? token = user.token;
-        setState(() {
-          isFetching = false;
-        });
+        authProvider.setIsFetching(false);
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
 
-        _authController.setUser(user);
+        authProvider.setUser(user);
+
 
         alert('Login succesful', "Success");
       } else {
-        setState(() {
-          isFetching = false;
-        });
+        authProvider.setIsFetching(false);
 
         final responseData = json.decode(response.body);
         final message = responseData['message'];
         alert(message ?? message, "Warning");
       }
     } catch (e) {
-      setState(() {
-        isFetching = false;
-      });
+      authProvider.setIsFetching(false);
       alert("Error occured", "Warning");
     }
   }
@@ -95,6 +95,7 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -136,18 +137,21 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
                       fit: BoxFit.contain,
                     ),
                     spaceHeight,
-                    _buildInputField(
+
+                    InputField(
                       hintText: 'Email',
                       controller: _emailController,
                     ),
+                    SizedBox(height: 10,),
+                    Text(validateEmail(_emailController)),
                     spaceHeight,
-                    _buildInputField(
+                    InputField(
                       hintText: 'Password',
                       controller: _passwordController,
                       obscureText: true,
                     ),
                     spaceHeight,
-                    _buildElevatedButton(),
+                    _buildElevatedButton(authProvider),
                     spaceHeight,
                     _wrightContent("Don't have an account", "Create one"),
                   ],
@@ -165,35 +169,16 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
     );
   }
 
-  Widget _buildInputField({
-    required String hintText,
-    bool obscureText = false,
-    required TextEditingController controller,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: TextField(
-        obscureText: obscureText,
-        controller: controller,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildElevatedButton() {
+  Widget _buildElevatedButton(AuthProvider authProvider) {
     return ElevatedButton(
-      onPressed: isFetching ? null : _handleLogin,
+      onPressed: authProvider.isFetching ? null : _handleLogin,
       style: ElevatedButton.styleFrom(
-          backgroundColor: isFetching ? Colors.grey : Colors.red),
+          backgroundColor: authProvider.isFetching ? Colors.grey : Colors.red),
       child: SizedBox(
         width: 280,
         height: 50,
-        child: isFetching
+        child: authProvider.isFetching
             ? const Center(
                 child: LoadingSpinner(),
               )

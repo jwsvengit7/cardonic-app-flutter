@@ -1,23 +1,28 @@
-import 'package:cardmonix/helpers/state_manager.dart';
-import 'package:cardmonix/onboarding_screen_example/onboarding_page.dart';
-import 'package:cardmonix/screen/User/giftcards/giftcardRate.dart';
+import 'package:cardmonix/helpers/provider.dart';
+import 'package:cardmonix/OnboardingScreen/onboarding_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/screen/login_signup.dart';
 import 'package:cardmonix/screen/create_account.dart';
 import 'package:cardmonix/screen/User/dashboard.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 int? screen;
 Future<void> main() async {
   await dotenv.load();
-  Get.put(AuthController());
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences pref = await SharedPreferences.getInstance();
   screen = pref.getInt("intscreen");
   await pref.setInt("intscreen", 1);
-  runApp(const MyApp());
+  AuthProvider authProvider = AuthProvider();
+  runApp(
+    ChangeNotifierProvider.value(
+      value: authProvider,
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -37,8 +42,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const OnBoardingPage(),
         '/login': (context) => const LoginSignupScreen(),
         '/signup': (context) => const CreateAccountScreen(),
-        '/dashboard': (context) => const DashboardScreen(),
-        '/rate': (context) => const RateCard(),
+        '/dashboard': (context) =>  DashboardScreen(),
       },
     );
   }

@@ -2,9 +2,10 @@ import 'package:cardmonix/screen/User/dashboard.dart';
 import 'package:cardmonix/dto/response/CoinsResponse.dart';
 import 'package:cardmonix/dto/response/WalletResponse.dart';
 import 'package:flutter/material.dart';
-
+enum TypeCoin { ETH, USDT, BTC }
 // ignore: must_be_immutable
 class WalletCard extends StatefulWidget {
+
   @override
   WalletCardState createState() => WalletCardState();
   final WalletResponse item;
@@ -38,7 +39,7 @@ class WalletCardState extends State<WalletCard> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const DashboardScreen(),
+            builder: (context) =>  DashboardScreen(),
           ),
         );
       },
@@ -61,16 +62,16 @@ class WalletCardState extends State<WalletCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Image.network(
-                  getImage(widget.item.coin),
-                  width: 40,
-                  height: 40,
-                ),
+                // Image.network(
+                //   getImage(widget.item.coin),
+                //   width: 40,
+                //   height: 40,
+                // ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      widget.item.coin,
+                      "widget.item.coin",
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,

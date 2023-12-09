@@ -4,11 +4,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 
-class Giftcards extends StatefulWidget {
+class GiftcardsI extends StatefulWidget {
   _UploadImageScreenState createState() => _UploadImageScreenState();
 }
 
-class _UploadImageScreenState extends State<Giftcards> {
+class _UploadImageScreenState extends State<GiftcardsI> {
   SizedBox sizedBox = const SizedBox(height: 10);
   File? image;
   final _picker = ImagePicker();

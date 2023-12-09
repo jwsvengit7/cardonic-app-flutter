@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:cardmonix/Components/modar/Alert.dart';
 import 'package:cardmonix/DTO/Response/Bank.dart';
+import 'package:cardmonix/dto/response/User.dart';
+import 'package:cardmonix/helpers/provider.dart';
 import 'package:cardmonix/service/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class Account extends StatefulWidget {
   const Account({super.key});
@@ -18,6 +21,7 @@ class AccountState extends State<Account> {
   String accountName = '';
   bool isFetchingAccountName = false;
   bool isSaveButtonDisabled = true;
+
 
   final accountNumberController = TextEditingController();
   SizedBox sizedBox = const SizedBox(height: 20);
@@ -54,12 +58,14 @@ class AccountState extends State<Account> {
   }
 
   void _saveAccount() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    User? user  = authProvider.user;
     try {
       isFetchingAccountName = true;
-      final token = await APIService().getStoredToken();
-      print(token);
 
-      final response = await APIService().saveAccount(token!,
+
+
+      final response = await APIService().saveAccount(user!.userid,
           accountNumberController.text, selectedBank!.name, accountName);
       isFetchingAccountName = false;
       final Map<String, dynamic> api = json.decode(response.body);
@@ -83,6 +89,7 @@ class AccountState extends State<Account> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add Bank Account"),
