@@ -1,5 +1,5 @@
 import 'package:cardmonix/components/buttons/button_widget.dart';
-import 'package:cardmonix/screen/login_signup.dart';
+import 'package:cardmonix/Screens/login_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 

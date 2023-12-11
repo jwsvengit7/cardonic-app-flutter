@@ -1,7 +1,7 @@
-import 'package:cardmonix/dto/response/CoinsResponse.dart';
-import 'package:cardmonix/dto/response/Giftcard.dart';
-import 'package:cardmonix/dto/response/User.dart';
-import 'package:cardmonix/dto/response/WalletResponse.dart';
+import 'package:cardmonix/DTO/Response/CoinsResponse.dart';
+import 'package:cardmonix/DTO/Response/Giftcard.dart';
+import 'package:cardmonix/DTO/Response/User.dart';
+import 'package:cardmonix/DTO/Response/WalletResponse.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {

@@ -1,9 +1,9 @@
-import 'package:cardmonix/helpers/provider.dart';
+import 'package:cardmonix/Helpers/provider.dart';
 import 'package:cardmonix/OnboardingScreen/onboarding_page.dart';
 import 'package:flutter/material.dart';
-import 'package:cardmonix/screen/login_signup.dart';
-import 'package:cardmonix/screen/create_account.dart';
-import 'package:cardmonix/screen/User/dashboard.dart';
+import 'package:cardmonix/Screens/login_signup.dart';
+import 'package:cardmonix/Screens/create_account.dart';
+import 'package:cardmonix/Screens/User/dashboard.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const OnBoardingPage(),
         '/login': (context) => const LoginSignupScreen(),
         '/signup': (context) => const CreateAccountScreen(),
-        '/dashboard': (context) =>  DashboardScreen(),
+        '/dashboard': (context) => const DashboardScreen(),
       },
     );
   }

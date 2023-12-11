@@ -1,19 +1,22 @@
 class AccountInfoResponse {
-  final String message;
-  final AccountInfo data;
-  final int dateTime;
+  final String accountName;
+  final String accountNumber;
+  final String bank;
+  final int userid;
 
   AccountInfoResponse({
-    required this.message,
-    required this.data,
-    required this.dateTime,
+    required this.bank,
+    required this.accountNumber,
+    required this.accountName,
+    required this.userid,
   });
 
   factory AccountInfoResponse.fromJson(Map<String, dynamic> json) {
     return AccountInfoResponse(
-      message: json['message'],
-      data: AccountInfo.fromJson(json['data']),
-      dateTime: json['dateTime'],
+      accountNumber: json['accountNumber'],
+      bank: json['bank'],
+      accountName: json['accountName'],
+      userid: json['userid'],
     );
   }
 }
