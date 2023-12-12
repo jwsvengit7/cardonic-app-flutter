@@ -12,7 +12,7 @@ class FooterState extends State<Footer> {
   void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
-      if (index == 2) {
+      if (index == 3) {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Profile()));
       } else if (index == 0) {
@@ -24,6 +24,8 @@ class FooterState extends State<Footer> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      fixedColor: Colors.red,
+      unselectedItemColor: const Color.fromARGB(117, 0, 0, 0),
       currentIndex: _currentIndex,
       onTap: _onItemTapped,
       items: const [
@@ -34,6 +36,10 @@ class FooterState extends State<Footer> {
         BottomNavigationBarItem(
           icon: Icon(Icons.search),
           label: 'Search',
+        ),
+          BottomNavigationBarItem(
+          icon: Icon(Icons.money_off_csred),
+          label: 'Trade',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),

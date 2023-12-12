@@ -24,40 +24,45 @@ class LoginSignupScreenState extends State<LoginSignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final SizedBox spaceHeight = const SizedBox(height: 20);
 
-  void _handleLogin() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+void _handleLogin() async {
+  final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    authProvider.setIsFetching(true);
-    try {
-      authProvider.setIsFetching(true);
-      final response = await APIService().login(
-          email: _emailController.text, password: _passwordController.text);
+  authProvider.setIsFetching(true);
 
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        final User user = User.fromJson(responseData);
+  try {
+    final response = await APIService().login(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
 
-        String? token = user.token;
-        authProvider.setIsFetching(false);
+    if (response.statusCode == 200) {
+    final responseData = json.decode(response.body);
+   
+      final User user = User.fromJson(responseData);
 
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', token);
-
-        authProvider.setUser(user);
-
-        alert('Login succesful', "Success");
-      } else {
-        authProvider.setIsFetching(false);
-
-        final responseData = json.decode(response.body);
-        final message = responseData['message'];
-        alert(message ?? message, "Warning");
-      }
-    } catch (e) {
+      String? token = user.token;
       authProvider.setIsFetching(false);
-      alert("Error occured", "Warning");
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', token);
+
+      authProvider.setUser(user);
+ print(responseData);
+      alert('Login successful', 'Success');
+    } else {
+      authProvider.setIsFetching(false);
+
+      final responseData = json.decode(response.body);
+     
+      final message = responseData['message'];
+      alert(message ?? 'Unknown error occurred', 'Warning');
     }
+  } catch (e) {
+    authProvider.setIsFetching(false);
+    alert('An error occurred', 'Warning');
   }
+}
+
 
   void _dashboard() {
     Navigator.of(context).push(

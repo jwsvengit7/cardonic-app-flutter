@@ -3,9 +3,13 @@ import 'package:cardmonix/DTO/Response/CoinsResponse.dart';
 import 'package:cardmonix/DTO/Response/Giftcard.dart';
 import 'package:cardmonix/DTO/Response/WalletResponse.dart';
 import 'package:cardmonix/Helpers/provider.dart';
+import 'package:cardmonix/Screens/User/Views/WidgetAppFreeCustom.dart';
+import 'package:cardmonix/Screens/User/Views/balanceView.dart';
+import 'package:cardmonix/Screens/User/Views/coins.dart';
 import 'package:cardmonix/Screens/login_signup.dart';
+import 'package:cardmonix/utils/height.dart';
+import 'package:cardmonix/utils/imageUtils.dart';
 import 'package:flutter/material.dart';
-import 'package:cardmonix/Screens/User/Coins/coins.dart';
 import 'package:cardmonix/Screens/User/footer.dart';
 import 'package:cardmonix/Screens/User/Drawers.dart';
 import 'package:cardmonix/Services/api_service.dart';
@@ -24,9 +28,10 @@ class DashboardScreen extends StatefulWidget {
 class DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  @override
+ @override
   void initState() {
     super.initState();
+  
   }
 
   Future<void> redirect() async {
@@ -36,7 +41,7 @@ class DashboardScreenState extends State<DashboardScreen> {
     if (authProvider.user!.token == "") {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LoginSignupScreen()),
+        MaterialPageRoute(builder: (context) =>  LoginSignupScreen()),
       );
     }
   }
@@ -81,7 +86,7 @@ class DashboardScreenState extends State<DashboardScreen> {
       authProvider.setGiftcards(fetchedGiftcards);
     } catch (e) {
       print('Error: $e');
-      print(authProvider.user!.email);
+     
     }
   }
 
@@ -93,9 +98,10 @@ class DashboardScreenState extends State<DashboardScreen> {
           await APIService().getWallet(authProvider.user!.userid);
       authProvider.setBalance(balance);
 
-      print(balance);
+      print(balance.balance_amount);
+      
     } catch (e) {
-      print(e);
+     throw Exception('Error: $e');
     }
   }
 
@@ -107,7 +113,7 @@ class DashboardScreenState extends State<DashboardScreen> {
       authProvider.setAccount(accountInfoResponse);
       print(accountInfoResponse);
     } catch (error) {
-      print("Error occurred: $error");
+    
       throw Exception('Error: $error');
     }
   }
@@ -117,9 +123,9 @@ class DashboardScreenState extends State<DashboardScreen> {
     try {
       final List<Coin> conlist = await APIService().fetchData();
       authProvider.setCoinList(conlist);
-      print(conlist);
+ 
     } catch (error) {
-      print("Error occurred: $error");
+   
       throw Exception('Error: $error');
     }
   }
@@ -135,7 +141,7 @@ class DashboardScreenState extends State<DashboardScreen> {
         getCategory("category"),
       ]);
     } catch (error) {
-      print("Error occurred: $error");
+     
       throw Exception('Error: $error');
     }
   }
@@ -144,7 +150,7 @@ class DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: Drawer(child: Drawers()),
+      drawer:  Drawer(child: Drawers()),
       appBar: AppBar(
         backgroundColor: Colors.white,
         toolbarHeight: 80,
@@ -190,9 +196,18 @@ class DashboardScreenState extends State<DashboardScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return const Center(
+              return  Center(
                 child:
-                    Text("An error occurred: Check Your Internet Connection"),
+                Center(child:
+                
+                Column(
+                  children: [
+                       Utils.sizedBoxHeight(30),
+                   Image.asset(NO_INTERNET,width: 300),
+                   Utils.sizedBoxHeight(10),
+                  const  Text("Internet Issues Please Try Again")
+                  ]),
+                )
               );
             } else {
               return buildMainUI(context);
@@ -200,7 +215,7 @@ class DashboardScreenState extends State<DashboardScreen> {
           },
         ),
       ),
-      bottomNavigationBar: Footer(),
+      bottomNavigationBar:  Footer(),
     );
   }
 
@@ -217,13 +232,19 @@ class DashboardScreenState extends State<DashboardScreen> {
                 child: ListView(
                   shrinkWrap: true,
                   children: <Widget>[
+                    BalanceView(),
+                    Utils.sizedBoxHeight(20),
+                       const WidgetAppFreeCustom(text:"Sell Giftcard",text2:"This is right about it"),
+
+                       const WidgetAppFreeCustom(text:"Sell Crypto",text2:"This is wrong about it"),
                     const HomeFirst(),
+                    
                     Container(
                       width: MediaQuery.devicePixelRatioOf(context),
                       color: Colors.white,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [Container()],
+                        children: [Text("2")],
                       ),
                     )
                   ],

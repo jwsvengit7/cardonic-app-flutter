@@ -1,9 +1,10 @@
 import 'package:cardmonix/Screens/User/dashboard.dart';
 import 'package:cardmonix/DTO/Response/CoinsResponse.dart';
 import 'package:cardmonix/DTO/Response/WalletResponse.dart';
+import 'package:cardmonix/utils/height.dart';
 import 'package:flutter/material.dart';
 enum TypeCoin { ETH, USDT, BTC }
-// ignore: must_be_immutable
+
 class WalletCard extends StatefulWidget {
 
   @override
@@ -18,7 +19,7 @@ class WalletCard extends StatefulWidget {
       required this.coinData});
 }
 
-SizedBox sizedBox = const SizedBox(height: 10);
+
 
 class WalletCardState extends State<WalletCard> {
   String getImage(String name) {
@@ -39,7 +40,7 @@ class WalletCardState extends State<WalletCard> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) =>  DashboardScreen(),
+            builder: (context) => const DashboardScreen(),
           ),
         );
       },
@@ -70,9 +71,9 @@ class WalletCardState extends State<WalletCard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
+                    const Text(
                       "widget.item.coin",
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                         color: Color.fromARGB(255, 85, 83, 83),
@@ -89,7 +90,7 @@ class WalletCardState extends State<WalletCard> {
                 ),
               ],
             ),
-            sizedBox,
+            Utils.sizedBoxHeight(10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -110,7 +111,7 @@ class WalletCardState extends State<WalletCard> {
                 ),
               ],
             ),
-            sizedBox,
+             Utils.sizedBoxHeight(10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

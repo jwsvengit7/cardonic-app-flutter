@@ -41,7 +41,7 @@ class CreateAccountScreenState extends State<CreateAccountScreen> {
         username: _usernameController.text,
       );
 
-      final dynamic responseData = json.decode(response.body);
+      final dynamic responseData = json.decode(response.data);
       final dynamic successMessage = responseData['payload'];
 
       if (successMessage != null &&

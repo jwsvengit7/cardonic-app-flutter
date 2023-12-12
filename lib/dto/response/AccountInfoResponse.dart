@@ -1,42 +1,25 @@
 class AccountInfoResponse {
-  final String accountName;
-  final String accountNumber;
-  final String bank;
-  final int userid;
+  int id;
+  int userId;
+  String accountNumber;
+  String accountName;
+  String bank;
 
   AccountInfoResponse({
-    required this.bank,
+    required this.id,
+    required this.userId,
     required this.accountNumber,
     required this.accountName,
-    required this.userid,
+    required this.bank,
   });
 
   factory AccountInfoResponse.fromJson(Map<String, dynamic> json) {
     return AccountInfoResponse(
-      accountNumber: json['accountNumber'],
-      bank: json['bank'],
-      accountName: json['accountName'],
-      userid: json['userid'],
-    );
-  }
-}
-
-class AccountInfo {
-  final String accountNumber;
-  final String accountName;
-  final String bankName;
-
-  AccountInfo({
-    required this.accountNumber,
-    required this.accountName,
-    required this.bankName,
-  });
-
-  factory AccountInfo.fromJson(Map<String, dynamic> json) {
-    return AccountInfo(
-      accountNumber: json['account_number'],
-      accountName: json['account_name'],
-      bankName: json['bankName'],
+      id: json['id'] ?? 0,
+      userId: json['userid'] ?? 0,
+      accountNumber: json['accountNumber'] ?? '',
+      accountName: json['accountName'] ?? '',
+      bank: json['bank'] ?? '',
     );
   }
 }

@@ -53,7 +53,7 @@ class CoinDetailScreenState extends State<CoinDetailScreen> {
 
       final response = await APIService().tradeCoin(saveToken!, coin, amount);
 
-      final Map<String, dynamic> data = json.decode(response.body);
+      final Map<String, dynamic> data = json.decode(response.data);
       final dynamic api = data["data"];
       print(api);
     } catch (e) {

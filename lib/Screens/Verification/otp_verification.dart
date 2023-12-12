@@ -132,7 +132,7 @@ class OtpState extends State<Otp> {
     try {
       final response =
           await APIService().verifyOtp(email: widget.email, otp: otp);
-      final Map<String, dynamic> responseData = json.decode(response.body);
+      final Map<String, dynamic> responseData = json.decode(response.data);
       final dynamic successMessage = responseData['data'];
       print(successMessage);
       print(response.statusCode);

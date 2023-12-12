@@ -64,7 +64,7 @@ class AccountState extends State<Account> {
       final response = await APIService().saveAccount(authProvider.user!.userid,
           accountNumberController.text, selectedBank!.name, accountName);
       isFetchingAccountName = false;
-      final Map<String, dynamic> api = json.decode(response.body);
+      final Map<String, dynamic> api = json.decode(response.data);
       final dynamic data = api["data"];
       if (response.statusCode == 200) {
         _popup(response.statusCode, data["message"], "Success");
@@ -194,7 +194,7 @@ class AccountState extends State<Account> {
           await APIService().getAccountName(accountNumber, bankCode);
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final data = json.decode(response.data);
         final accountNameResponse = data['data']['account_name'] ?? 'NOT FOUND';
 
         setState(() {

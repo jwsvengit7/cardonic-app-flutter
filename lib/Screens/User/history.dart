@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:cardmonix/Helpers/provider.dart';
 import 'package:cardmonix/Screens/User/dashboard.dart';
-import 'package:cardmonix/Screens/User/View/viewHistory.dart';
+import 'package:cardmonix/Screens/User/Views/viewHistory.dart';
 import 'package:cardmonix/Services/api_service.dart';
 
 import 'package:flutter/material.dart';
@@ -45,10 +45,10 @@ class HistoryState extends State<History> {
     try {
       final savedToken = await APIService().getStoredToken();
       final response =
-          await APIService().getdeposit(savedToken, authProvider.user!.userid);
+          await APIService().getDeposit(savedToken, authProvider.user!.userid);
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
+        final Map<String, dynamic> data = json.decode(response.data);
         final List<dynamic> api = data["data"];
 
         setState(() {

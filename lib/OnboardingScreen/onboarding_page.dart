@@ -2,13 +2,14 @@ import 'package:cardmonix/components/buttons/button_widget.dart';
 import 'package:cardmonix/Screens/login_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:cardmonix/utils/colors.dart';
 
 class OnBoardingPage extends StatelessWidget {
   const OnBoardingPage({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.blue,
+        backgroundColor: mainColor,
         body: IntroductionScreen(
           pages: [
             // Page 1
@@ -61,7 +62,7 @@ class OnBoardingPage extends StatelessWidget {
           next: const Icon(Icons.arrow_forward, color: Colors.white),
           dotsDecorator: getDotDecoration(),
           onChange: (index) => {},
-          globalBackgroundColor: Colors.blue,
+          globalBackgroundColor: mainColor,
           skipOrBackFlex: 0,
           nextFlex: 0,
           animationDuration: 500,
@@ -97,6 +98,6 @@ class OnBoardingPage extends StatelessWidget {
         ),
         bodyPadding: const EdgeInsets.all(16).copyWith(bottom: 0),
         imagePadding: const EdgeInsets.all(24),
-        pageColor: Colors.blue,
+        pageColor: mainColor,
       );
 }

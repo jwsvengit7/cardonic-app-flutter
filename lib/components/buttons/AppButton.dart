@@ -1,10 +1,11 @@
+import 'package:cardmonix/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback onClicked;
 
-  const AppButton({
+  const AppButton({super.key, 
     required this.text,
     required this.onClicked,
   });
@@ -14,7 +15,7 @@ class AppButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onClicked,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color.fromARGB(255, 246, 111, 101),
+        backgroundColor: mainColor,
         shape: StadiumBorder(),
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       ),

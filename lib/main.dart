@@ -1,5 +1,6 @@
 import 'package:cardmonix/Helpers/provider.dart';
 import 'package:cardmonix/OnboardingScreen/onboarding_page.dart';
+import 'package:cardmonix/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/Screens/login_signup.dart';
 import 'package:cardmonix/Screens/create_account.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
       title: 'CardMonix',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: mainColor),
           useMaterial3: true,
           visualDensity: VisualDensity.adaptivePlatformDensity),
       initialRoute: screen == 0 || screen == null ? "/" : "/login",

@@ -123,7 +123,7 @@ class CardState extends State<CardContent> {
           await APIService().getAccountName(accountNumber, bankCode);
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final data = json.decode(response.data);
         final accountNameResponse = data['data']['account_name'] ?? 'NOT FOUND';
 
         setState(() {
