@@ -22,6 +22,7 @@ Future<void> main() async {
     ChangeNotifierProvider.value(
       value: authProvider,
       child: const MyApp(),
+
     ),
   );
 }

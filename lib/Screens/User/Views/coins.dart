@@ -1,10 +1,8 @@
 import 'package:cardmonix/utils/colors.dart';
 import 'package:intl/intl.dart';
-
 import 'package:cardmonix/Helpers/provider.dart';
 import 'package:cardmonix/Screens/User/Coins/CoinDetails.dart';
 import 'package:cardmonix/utils/height.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

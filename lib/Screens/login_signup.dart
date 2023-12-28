@@ -3,6 +3,7 @@ import 'package:cardmonix/DTO/Response/User.dart';
 import 'package:cardmonix/Helpers/provider.dart';
 import 'package:cardmonix/Services/api_service.dart';
 import 'package:cardmonix/utils/height.dart';
+import 'package:cardmonix/utils/imageUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:cardmonix/Screens/create_account.dart';
 import 'package:provider/provider.dart';
@@ -130,7 +131,7 @@ void _handleLogin() async {
                   children: [
                     spaceHeight,
                     Image.asset(
-                      'images/logo-app.png',
+                   LOGO,
                       width: 70,
                       height: 70,
                       fit: BoxFit.contain,

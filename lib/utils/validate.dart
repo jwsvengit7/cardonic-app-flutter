@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-
+import 'package:intl/intl.dart';
 String validateEmail(TextEditingController value) {
   String _msg = "";
   RegExp regex = new RegExp(
@@ -10,4 +10,8 @@ String validateEmail(TextEditingController value) {
     _msg = "Please provide a valid Email address";
   }
   return _msg;
+}
+NumberFormat getCurrency(String currency){
+  return
+    NumberFormat.currency(locale: 'en_NG', symbol: currency);
 }

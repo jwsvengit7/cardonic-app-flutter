@@ -77,21 +77,6 @@ Future<List<Coin>> fetchData() async {
 }
 
 
-  Future<Response> fetchUserDetails(var savedToken) async {
-    try {
-      return await _dio.get(
-        '/api/v1/user/user-details',
-        options: Options(
-          headers: {'Authorization': 'Bearer $savedToken'},
-        ),
-      );
-    } catch (e) {
-      print('Error: $e');
-      throw Exception('Failed to fetch user details: $e');
-    }
-  }
-
-
 
 Future<List<Giftcard>> fetchGiftcards(var userId) async {
   try {

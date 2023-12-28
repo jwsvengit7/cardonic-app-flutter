@@ -2,6 +2,8 @@ import 'package:cardmonix/Components/input/input_field.dart';
 import 'package:cardmonix/Screens/Verification/otp_verification.dart';
 import 'package:cardmonix/Screens/login_signup.dart';
 import 'package:cardmonix/Services/api_service.dart';
+import 'package:cardmonix/utils/height.dart';
+import 'package:cardmonix/utils/imageUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -22,7 +24,7 @@ class CreateAccountScreenState extends State<CreateAccountScreen> {
   final _cpasswordController = TextEditingController();
   final _usernameController = TextEditingController();
 
-  SizedBox spaceHieigt = const SizedBox(height: 20);
+
 
   void _registerUser() async {
     if (_passwordController.text != _cpasswordController.text) {
@@ -133,38 +135,38 @@ class CreateAccountScreenState extends State<CreateAccountScreen> {
               child: Center(
                 child: Column(
                   children: [
-                    spaceHieigt,
+                    Utils.sizedBoxHeight(20),
                     Image.asset(
-                      'images/logo-app.png',
+                      LOGO,
                       width: 70,
                       height: 70,
                       fit: BoxFit.contain,
                     ),
-                    spaceHieigt,
+                    Utils.sizedBoxHeight(20),
                     InputField(
                       hintText: 'Username',
                       controller: _usernameController,
                     ),
-                    spaceHieigt,
+                    Utils.sizedBoxHeight(20),
                     InputField(
                       hintText: 'Email',
                       controller: _emailController,
                     ),
-                    spaceHieigt,
+                    Utils.sizedBoxHeight(20),
                     InputField(
                       hintText: 'Password',
                       controller: _passwordController,
                       obscureText: true,
                     ),
-                    spaceHieigt,
+                    Utils.sizedBoxHeight(20),
                     InputField(
                       hintText: 'Re-Password',
                       controller: _cpasswordController,
                       obscureText: true,
                     ),
-                    spaceHieigt,
+Utils.sizedBoxHeight(20),
                     buildElevatedButton(context, authProvider),
-                    spaceHieigt,
+Utils.sizedBoxHeight(20),
                     _wrightContent("Already have an account", "Log In"),
                   ],
                 ),

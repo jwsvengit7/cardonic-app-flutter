@@ -1,9 +1,12 @@
 import 'package:cardmonix/Helpers/provider.dart';
+import 'package:cardmonix/utils/height.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
+  const Profile({super.key});
+  @override
   ProfileState createState() => ProfileState();
 }
 
@@ -12,10 +15,11 @@ class ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
                 final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                final String appBarTxt="Profile";
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
+        title: Text(appBarTxt),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -52,8 +56,8 @@ class ProfileState extends State<Profile> {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
+                      Utils.sizedBoxHeight(
+                         20,
                       ),
                       Text(
                         authProvider.user!.username,

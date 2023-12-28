@@ -18,7 +18,7 @@ class BalanceView extends StatelessWidget{
               color: Colors.white70,
               padding: const EdgeInsets.only(top: 40),
               child: PageView.builder(
-                itemCount: 3, // Three different balance sections
+                itemCount: 3,
                 itemBuilder: (BuildContext context, int index) {
                   return buildBalanceSection(authProvider, index);
                 },

@@ -1,81 +1,55 @@
 import 'package:cardmonix/Screens/User/dashboard.dart';
 import 'package:cardmonix/Services/api_service.dart';
-import 'package:cardmonix/utils/imageUtils.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'dart:convert';
-
-class Otp extends StatefulWidget {
-  final String email;
-
-  const Otp({super.key, required this.email});
+import 'package:cardmonix/utils/imageUtils.dart';
+import 'package:cardmonix/Components/buttons/AppButton.dart';
+class ChangePin extends StatefulWidget {
 
   @override
-  OtpState createState() => OtpState();
+  ChangePinState createState() => ChangePinState();
 }
 
-class OtpState extends State<Otp> {
+class ChangePinState extends State<ChangePin> {
   final TextEditingController _otpController1 = TextEditingController();
   final TextEditingController _otpController2 = TextEditingController();
   final TextEditingController _otpController3 = TextEditingController();
   final TextEditingController _otpController4 = TextEditingController();
+  final String  prompt=  "Kindly Enter To Create Transaction Pin ";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("OTP")),
+      appBar: AppBar(title: const Text("Create Pin")),
       body: Column(
+
         children: [
-          Container(
-            width: 100,
-            height: 150,
-            alignment: Alignment.center,
-            child: Image.asset(
-              LOGO, 
-              width: 70,
-              height: 70,
-            ),
+          Center(
+            child:Image.asset(PIN_IMAGE,width:130)
           ),
-          const SizedBox(height: 20),
-          Text(
-            "Enter the OTP sent to ${widget.email}",
+          const SizedBox(height: 40),
+          Center(
+          child: Text(
+           prompt,
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.red,
+            ),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 50),
           _buildOtpInputFields(),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _verifyOtp,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 244, 117, 54),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-            ),
-            child: const Text(
-              "Verify OTP",
-              style: TextStyle(color: Colors.white),
-            ),
+
+          const SizedBox(height: 70),
+
+          AppButton(
+            text: "Create Pin",
+            onClicked: () {
+              _createPin;
+            },
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _resendOtp,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 7, 127, 225),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-            ),
-            child: const Text(
-              "Resend OTP",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+
         ],
       ),
     );
@@ -130,29 +104,13 @@ class OtpState extends State<Otp> {
         _otpController3.text +
         _otpController4.text;
 
-    try {
-      final response =
-          await APIService().verifyOtp(email: widget.email, otp: otp);
-      final Map<String, dynamic> responseData = json.decode(response.data);
-      final dynamic successMessage = responseData['data'];
-      print(successMessage);
-      print(response.statusCode);
-      if (response.statusCode == 202) {
-        alert(successMessage, "Success");
-      } else {
-        alert(successMessage, "Warning");
-        //okparaifeanyi21@gmail.com
-      }
-    } catch (e) {
-      print(e);
-      alert("Error occurred", "Warning");
-    }
+
   }
 
   void success() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => DashboardScreen(),
+        builder: (context) => const DashboardScreen(),
       ),
     );
   }
@@ -172,7 +130,7 @@ class OtpState extends State<Otp> {
         }).show();
   }
 
-  void _resendOtp() {
+  void _createPin() {
     // Implement logic to resend OTP here.
   }
 

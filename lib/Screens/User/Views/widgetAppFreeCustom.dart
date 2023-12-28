@@ -4,7 +4,7 @@ import 'package:cardmonix/utils/height.dart';
 import 'package:flutter/material.dart';
 
 class WidgetAppFreeCustom extends StatefulWidget{
-    final String text;
+  final String text;
   final String text2;
 
   const WidgetAppFreeCustom({
